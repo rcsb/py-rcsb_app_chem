@@ -1,0 +1,6 @@
+--extra-index-url https://pypi.anaconda.org/OpenEye/simple
+OpenEye-toolkits==2019.10.2
+fastapi[all]
+uvicorn
+rcsb.utils.io >= 0.57
+rcsb.utils.chem >= 0.20

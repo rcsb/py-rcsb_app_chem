@@ -1,7 +1,7 @@
 ##
-# File:    ChemCompSearchWrapperFixture.py
+# File:    ReloadMatchDependencies.py
 # Author:  J. Westbrook
-# Date:    13-Mar-2020
+# Date:    15-Mar-2020
 # Version: 0.001
 #
 # Update:
@@ -23,9 +23,7 @@ import os
 import platform
 import resource
 import time
-import unittest
 
-from rcsb.utils.chem import __version__
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 from rcsb.utils.io.MarshalUtil import MarshalUtil
 
@@ -38,32 +36,32 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-class ChemCompSearchWrapperFixture(unittest.TestCase):
-    def setUp(self):
+class ReloadMatchDependencies(object):
+    def __init__(self):
         self.__startTime = time.time()
-        self.__testFlagFull = os.environ.get("CHEM_SEARCH_CC_PREFIX", "cc-abbrev") == "cc-full"
-        self.__workPath = os.path.join(HERE, "test-output")
-        self.__dataPath = os.path.join(HERE, "test-data")
-        self.__cachePath = os.path.join(HERE, "test-output", "CACHE")
-        # self.__buildTypeList = ["oe-iso-smiles", "oe-smiles", "cactvs-iso-smiles", "cactvs-smiles", "inchi"]
-        # Run the bootstrap configuration
+        self.__cachePath = os.environ.get("CHEM_SEARCH_CACHE_PATH", "./CACHE")
+        ccFileNamePrefix = os.environ.get("CHEM_SEARCH_CC_PREFIX", "cc-abbrev")
+        configFlagFull = ccFileNamePrefix == "cc-full"
+        self.__dataPath = os.path.join(TOPDIR, "rcsb", "app", "tests-chem", "test-data")
+        # Create the bootstrap configuration
         self.__mU = MarshalUtil(workPath=self.__cachePath)
-        self.__testBootstrapConfig()
-        logger.debug("Running tests on version %s", __version__)
-        logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+        self.__makeBootstrapConfig(configFlagFull)
+        logger.info("Starting at %s", time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
-    def tearDown(self):
+    def shutdown(self):
         unitS = "MB" if platform.system() == "Darwin" else "GB"
         rusageMax = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         logger.info("Maximum resident memory size %.4f %s", rusageMax / 10 ** 6, unitS)
         endTime = time.time()
-        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.info("Completed at %s (%.4f seconds)", time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
-    def __testBootstrapConfig(self):
-        """Test read/write search configuration.
+    def __makeBootstrapConfig(self, configFlagFull):
+        """ Create search configuration bootstrap files
         """
+        ok = False
         try:
-            if self.__testFlagFull:
+            if configFlagFull:
+
                 os.environ["CHEM_SEARCH_CACHE_PATH"] = os.path.join(self.__cachePath)
                 os.environ["CHEM_SEARCH_CC_PREFIX"] = "cc-full"
                 ccFileNamePrefix = "cc-full"
@@ -73,6 +71,7 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
                 ccFileNamePrefix = "cc-full"
                 ccUrlTarget = None
                 birdUrlTarget = None
+
             else:
                 os.environ["CHEM_SEARCH_CACHE_PATH"] = os.path.join(self.__cachePath)
                 os.environ["CHEM_SEARCH_CC_PREFIX"] = "cc-abbrev"
@@ -83,6 +82,7 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
                 configFilePath = os.path.join(configDirPath, ccFileNamePrefix + "-config.json")
                 oeFileNamePrefix = "oe-abbrev"
             #
+            logger.info("Updating configuration using %s and %s", ccFileNamePrefix, self.__cachePath)
             molLimit = None
             useCache = False
             logSizes = False
@@ -96,7 +96,8 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
             limitPerceptions = True
             quietFlag = True
             #
-            fpTypeCuttoffD = {"TREE": 0.6, "MACCS": 0.9, "PATH": 0.6, "CIRCULAR": 0.6, "LINGO": 0.9}
+            # fpTypeCuttoffD = {"TREE": 0.6, "MACCS": 0.9, "PATH": 0.6, "CIRCULAR": 0.6, "LINGO": 0.9}
+            fpTypeCuttoffD = {"TREE": 0.6, "MACCS": 0.9}
             buildTypeList = ["oe-iso-smiles", "oe-smiles", "cactvs-iso-smiles", "cactvs-smiles", "inchi"]
             #
             oesmpKwargs = {
@@ -135,38 +136,31 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
             }
             configD = {"versionNumber": 0.20, "ccsiKwargs": ccsiKwargs, "oesmpKwargs": oesmpKwargs}
             self.__mU.mkdir(configDirPath)
-            self.__mU.doExport(configFilePath, configD, fmt="json", indent=3)
+            ok = self.__mU.doExport(configFilePath, configD, fmt="json", indent=3)
+            return ok
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
+        return ok
 
-    def testUpdateDependencies(self):
+    def updateDependencies(self):
         """Test update search index.
         """
         try:
+            logger.info("Starting update %r in %r", os.environ["CHEM_SEARCH_CC_PREFIX"], os.environ["CHEM_SEARCH_CACHE_PATH"])
             ccsw = ChemCompSearchWrapper()
-            ok = ccsw.readConfig()
-            self.assertTrue(ok)
-            ok = ccsw.updateChemCompIndex()
-            self.assertTrue(ok)
-            ok = ccsw.updateSearchIndex()
-            self.assertTrue(ok)
-            ok = ccsw.updateSearchMoleculeProvider()
-            self.assertTrue(ok)
+            ok1 = ccsw.readConfig()
+            ok2 = ccsw.updateChemCompIndex()
+            ok3 = ccsw.updateSearchIndex()
+            ok4 = ccsw.updateSearchMoleculeProvider()
             # verify access -
-            ok = ccsw.reloadSearchDatabase()
-            self.assertTrue(ok)
+            ok5 = ccsw.reloadSearchDatabase()
+            return ok1 and ok2 and ok3 and ok4 and ok5
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
-
-
-def loadDependenciesSuite():
-    suiteSelect = unittest.TestSuite()
-    suiteSelect.addTest(ChemCompSearchWrapperFixture("testUpdateDependencies"))
-    return suiteSelect
+        return False
 
 
 if __name__ == "__main__":
-    mySuite = loadDependenciesSuite()
-    unittest.TextTestRunner(verbosity=2).run(mySuite)
+    rmd = ReloadMatchDependencies()
+    rmd.updateDependencies()
+    rmd.shutdown()

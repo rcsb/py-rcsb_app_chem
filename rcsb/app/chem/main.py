@@ -16,6 +16,7 @@ from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
 from . import descriptorMatch
 from . import formulaMatch
+from . import serverStatus
 
 # ---
 logger = logging.getLogger("app_chem")
@@ -45,11 +46,6 @@ def shutdownEvent():
     logger.info("Shutdown - application ended")
 
 
-@app.get("/")
-def readRoot():
-    return {"msg": "Sevice is up!"}
-
-
 app.include_router(
     formulaMatch.router, prefix="/chem-match-v1",
 )
@@ -57,3 +53,5 @@ app.include_router(
 app.include_router(
     descriptorMatch.router, prefix="/chem-match-v1",
 )
+
+app.include_router(serverStatus.router)

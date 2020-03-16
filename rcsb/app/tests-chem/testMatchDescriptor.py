@@ -82,7 +82,7 @@ class MatchDescriptorTests(unittest.TestCase):
                 rD = response.json()
                 self.assertTrue(rD["descriptorType"], "SMILES")
                 self.assertTrue(rD["query"], smi)
-                self.assertTrue(len(rD["matchedIdList"]) > 1)
+                self.assertTrue(len(rD["matchedIdList"]) > 0)
         except Exception as e:
             logger.exception("Failing with %s", str(e))
             self.fail()
@@ -97,7 +97,7 @@ class MatchDescriptorTests(unittest.TestCase):
                 rD = response.json()
                 self.assertTrue(rD["descriptorType"], "SMILES")
                 self.assertTrue(rD["query"], smi)
-                self.assertTrue(len(rD["matchedIdList"]) > 1)
+                self.assertTrue(len(rD["matchedIdList"]) > 0)
         except Exception as e:
             logger.exception("Failing with %s", str(e))
             self.fail()

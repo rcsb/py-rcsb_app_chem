@@ -74,8 +74,9 @@ class MatchFormulaTests(unittest.TestCase):
     def testMatchRangePost(self):
         try:
             fQ = {"O": {"min": 1, "max": 5}, "C": {"min": 6, "max": 15}, "H": {"min": 5, "max": 20}}
+            matchSubset = True
             with TestClient(app) as client:
-                response = client.post("/chem-match-v1/formula/range", json={"query": fQ})
+                response = client.post("/chem-match-v1/formula/range", json={"query": fQ, "matchSubset": matchSubset})
                 logger.info("Status %r response %s", response.status_code, response.json())
                 self.assertTrue(response.status_code == 200)
                 rD = response.json()

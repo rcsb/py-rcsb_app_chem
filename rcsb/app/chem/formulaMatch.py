@@ -3,6 +3,7 @@
 # Date: 12-Mar-2020
 #
 ##
+# pylint: skip-file
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "john.westbrook@rcsb.org"

@@ -3,6 +3,7 @@
 # Date: 13-Mar-2020 jdw
 #
 ##
+# pylint: skip-file
 
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"

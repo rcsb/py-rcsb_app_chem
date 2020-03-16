@@ -2,9 +2,12 @@
 #
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TOPDIR="$(dirname "$HERE")"
+OE_LICENSE=${OE_LICENSE:=~/oe_license.txt}
 echo "HERE=${HERE}"
 echo "TOPDIR=${TOPDIR}"
+echo "OE_LICENSE=$OE_LICENSE"
 #
+
 THISIP=${HOSTIP:="127.0.0.1"}
 THISPORT=${HOSTPOST:="8000"}
 #

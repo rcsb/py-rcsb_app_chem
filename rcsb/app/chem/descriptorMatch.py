@@ -5,7 +5,7 @@ from enum import Enum
 from typing import List
 from fastapi import APIRouter, Path, Query
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field  # pylint disable: no-name-in-module
+from pydantic import BaseModel, Field  # pylint disable=no-name-in-module
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 

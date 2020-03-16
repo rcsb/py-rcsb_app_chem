@@ -2,7 +2,7 @@ import logging
 from typing import Dict, List
 from fastapi import APIRouter, Query
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field  # pylint disable: no-name-in-module
+from pydantic import BaseModel, Field  # pylint disable=no-name-in-module
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 from rcsb.app.chem.ElementSymbol import ElementSymbol

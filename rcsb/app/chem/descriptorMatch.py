@@ -1,3 +1,14 @@
+##
+# File: descriptionMatch.py
+# Date: 13-Mar-2020 jdw
+#
+##
+
+__docformat__ = "restructuredtext en"
+__author__ = "John Westbrook"
+__email__ = "john.westbrook@rcsb.org"
+__license__ = "Apache 2.0"
+
 import logging
 
 from collections import namedtuple
@@ -5,7 +16,9 @@ from enum import Enum
 from typing import List
 from fastapi import APIRouter, Path, Query
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field  # pylint disable=no-name-in-module
+
+# pylint disable=no-name-in-module
+from pydantic import BaseModel, Field
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 

@@ -1,5 +1,6 @@
-
 # RCSB Python Chemical Search Service
+
+[![Build Status](https://dev.azure.com/rcsb/RCSB%20PDB%20Python%20Projects/_apis/build/status/rcsb.py-rcsb_app_chem?branchName=master)](https://dev.azure.com/rcsb/RCSB%20PDB%20Python%20Projects/_build/latest?definitionId=22&branchName=master)
 
 ## Introduction
 

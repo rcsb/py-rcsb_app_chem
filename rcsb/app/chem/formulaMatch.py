@@ -1,7 +1,19 @@
+##
+# File: formulaMatch.py
+# Date: 12-Mar-2020
+#
+##
+__docformat__ = "restructuredtext en"
+__author__ = "John Westbrook"
+__email__ = "john.westbrook@rcsb.org"
+__license__ = "Apache 2.0"
+
 import logging
 from typing import Dict, List
 from fastapi import APIRouter, Query
 from fastapi.encoders import jsonable_encoder
+
+# pylint disable=no-name-in-module
 from pydantic import BaseModel, Field  # pylint disable=no-name-in-module
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper

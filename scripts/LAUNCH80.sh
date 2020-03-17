@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 #  Run as:
-#  sudo export OE_LICENSE=/home/ubuntu/oe_license.txt; nohup ./scripts/LAUNCH80.sh >& LOGTODAY
+#
+#  sudo nohup ./scripts/LAUNCH80.sh >& LOGTODAY
 #
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TOPDIR="$(dirname "$HERE")"

@@ -2,7 +2,7 @@
 #
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TOPDIR="$(dirname "$HERE")"
-OE_LICENSE=${OE_LICENSE:=~/oe_license.txt}
+export OE_LICENSE=${OE_LICENSE:=~/oe_license.txt}
 #
 echo "OE_LICENSE=$OE_LICENSE"
 echo "HERE=${HERE}"

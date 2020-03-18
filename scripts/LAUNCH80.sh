@@ -18,4 +18,4 @@ export CHEM_SEARCH_CC_PREFIX="cc-full"
 export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
 #
 cd ${TOPDIR}
-python3.8 -m uvicorn --workers 1 --host ${THISIP} --port ${THISPORT} --reload --forwarded-allow-ips 0.0.0.0 rcsb.app.chem.main:app
+python3.8 -m uvicorn --workers 2 --host ${THISIP} --port ${THISPORT} --reload --forwarded-allow-ips ${THISIP} rcsb.app.chem.main:app

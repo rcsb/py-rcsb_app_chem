@@ -59,9 +59,12 @@ class DescriptorQueryResult(BaseModel):
 @router.get("/{descriptorType}", response_model=DescriptorQueryResult, tags=["descriptor"])
 def matchGetQuery(
     query: str = Query(None, title="Descriptor string", description="SMILES or InChI chemical descriptor", example="c1ccc(cc1)[C@@H](C(=O)O)N"),
-    matchType: DescriptorMatchType = Query(None, title="Query match type", description="Qualitative graph matching or fingerprint comparison criteria", example="graph-relaxed"),
+    matchType: DescriptorMatchType = Query(
+        "graph-relaxed", title="Query match type", description="Qualitative graph matching or fingerprint comparison criteria", example="graph-relaxed"
+    ),
     descriptorType: DescriptorType = Path(..., title="Descriptor type", description="Type of chemical descriptor (SMILES or InChI)", example="SMILES"),
 ):
+    matchType = matchType if matchType else "graph-relaxed"
     logger.info("Got %r %r %r", descriptorType, query, matchType)
     # ---
     ccsw = ChemCompSearchWrapper()
@@ -81,15 +84,17 @@ def matchGetQuery(
 def matchPostQuery(
     query: DescriptorQuery, descriptorType: DescriptorType = Path(..., title="Descriptor type", description="Type of chemical descriptor (SMILES or InChI)", example="SMILES"),
 ):
+
     logger.info("Got %r %r", descriptorType, query)
     qD = jsonable_encoder(query)
     logger.debug("qD %r", qD)
+    matchType = qD["matchType"] if "matchType" in qD and qD["matchType"] else "graph-relaxed"
     # ---
     ccsw = ChemCompSearchWrapper()
-    retStatus, ssL, fpL = ccsw.matchByDescriptor(qD["query"], descriptorType, matchOpts=qD["matchType"])
+    retStatus, ssL, fpL = ccsw.matchByDescriptor(qD["query"], descriptorType, matchOpts=matchType)
     logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
     #
-    if qD["matchType"] in ["fingerprint-similarity"]:
+    if matchType in ["fingerprint-similarity"]:
         # filter remove search index extensions
         # rL = [mr.ccId for mr in fpL]
         rL = list(OrderedDict.fromkeys([mr.ccId.split("|")[0] for mr in fpL]))

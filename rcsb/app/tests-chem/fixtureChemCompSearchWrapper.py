@@ -93,7 +93,7 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
             maxChunkSize = 10
             logger.info("+++ >>> Using MAXPROC %d", numProc)
             #
-            limitPerceptions = True
+            limitPerceptions = False
             quietFlag = True
             #
             fpTypeCuttoffD = {"TREE": 0.6, "MACCS": 0.9, "PATH": 0.6, "CIRCULAR": 0.6, "LINGO": 0.9}

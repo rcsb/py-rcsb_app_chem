@@ -76,7 +76,7 @@ def matchGetQuery(
     for mr in qL:
         ccId = mr.ccId.split("|")[0]
         rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
-    rTupL = sorted(rD.items(), key=lambda kv: kv[1])
+    rTupL = sorted(rD.items(), key=lambda kv: kv[1], reverse=True)
     rL = [rTup[0] for rTup in rTupL]
     scoreL = [rTup[1] for rTup in rTupL]
     # ---
@@ -102,7 +102,7 @@ def matchPostQuery(
     for mr in qL:
         ccId = mr.ccId.split("|")[0]
         rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
-    rTupL = sorted(rD.items(), key=lambda kv: kv[1])
+    rTupL = sorted(rD.items(), key=lambda kv: kv[1], reverse=True)
     rL = [rTup[0] for rTup in rTupL]
     scoreL = [rTup[1] for rTup in rTupL]
     # ---

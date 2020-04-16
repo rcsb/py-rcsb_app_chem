@@ -5,6 +5,7 @@
   18-Mar-2020  - V0.13 Update deployment scripts
   10-Apr-2020  - V0.14 Update default failures and configuration settings
   11-Apr-2020  - V0.15 Further updates in configuration bootstrap
+  16-Apr-2020  - V0.16 Add fingerprint scores to descriptor return object
 
 
 

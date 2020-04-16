@@ -54,6 +54,7 @@ class DescriptorQueryResult(BaseModel):
     query: str = Field(None, title="Descriptor query string", description="SMILES or InChI chemical descriptor", example="c1ccc(cc1)[C@@H](C(=O)O)N")
     descriptorType: DescriptorType = Field(None, title="Descriptor type", description="SMILES or InChI", example="SMILES")
     matchedIdList: List[str] = Field(None, title="Matched identifiers", description="Matched chemical component or BIRD identifier codes", example=["004"])
+    matchedScoreList: List[float] = Field(None, title="Match scores", description="Match scores from fingerprint screen (1.0 - 0.0)", example=[0.99, 0.92, 0.90])
 
 
 @router.get("/{descriptorType}", response_model=DescriptorQueryResult, tags=["descriptor"])
@@ -70,14 +71,16 @@ def matchGetQuery(
     ccsw = ChemCompSearchWrapper()
     retStatus, ssL, fpL = ccsw.matchByDescriptor(query, descriptorType, matchOpts=matchType)
     logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
-    if matchType in ["fingerprint-similarity"]:
-        rL = list(OrderedDict.fromkeys([mr.ccId.split("|")[0] for mr in fpL]))
-        # rL = [mr.ccId for mr in fpL]
-    else:
-        # rL = [mr.ccId for mr in ssL]
-        rL = list(OrderedDict.fromkeys([mr.ccId.split("|")[0] for mr in ssL]))
+    qL = fpL if matchType in ["fingerprint-similarity"] else ssL
+    rD = {}
+    for mr in fpL:
+        ccId = mr.ccId.split("|")[0]
+        rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
+    rTupL = sorted(rD.items(), key=lambda kv: kv[1])
+    rL = [rTup[0] for rTup in rTupL]
+    scoreL = [rTup[1] for rTup in rTupL]
     # ---
-    return {"query": query, "descriptorType": descriptorType, "matchedIdList": rL}
+    return {"query": query, "descriptorType": descriptorType, "matchedIdList": rL, "matchedScoreList": scoreL}
 
 
 @router.post("/{descriptorType}", response_model=DescriptorQueryResult, tags=["descriptor"])
@@ -94,11 +97,13 @@ def matchPostQuery(
     retStatus, ssL, fpL = ccsw.matchByDescriptor(qD["query"], descriptorType, matchOpts=matchType)
     logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
     #
-    if matchType in ["fingerprint-similarity"]:
-        # filter remove search index extensions
-        # rL = [mr.ccId for mr in fpL]
-        rL = list(OrderedDict.fromkeys([mr.ccId.split("|")[0] for mr in fpL]))
-    else:
-        rL = list(OrderedDict.fromkeys([mr.ccId.split("|")[0] for mr in ssL]))
+    qL = fpL if matchType in ["fingerprint-similarity"] else ssL
+    rD = {}
+    for mr in fpL:
+        ccId = mr.ccId.split("|")[0]
+        rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
+    rTupL = sorted(rD.items(), key=lambda kv: kv[1])
+    rL = [rTup[0] for rTup in rTupL]
+    scoreL = [rTup[1] for rTup in rTupL]
     # ---
-    return {"query": query.query, "descriptorType": descriptorType, "matchedIdList": rL}
+    return {"query": query.query, "descriptorType": descriptorType, "matchedIdList": rL, "matchedScoreList": scoreL}

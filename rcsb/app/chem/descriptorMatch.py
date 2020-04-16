@@ -12,7 +12,7 @@ __license__ = "Apache 2.0"
 
 import logging
 
-from collections import namedtuple, OrderedDict
+from collections import namedtuple
 from enum import Enum
 from typing import List
 from fastapi import APIRouter, Path, Query
@@ -73,7 +73,7 @@ def matchGetQuery(
     logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
     qL = fpL if matchType in ["fingerprint-similarity"] else ssL
     rD = {}
-    for mr in fpL:
+    for mr in qL:
         ccId = mr.ccId.split("|")[0]
         rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
     rTupL = sorted(rD.items(), key=lambda kv: kv[1])
@@ -99,7 +99,7 @@ def matchPostQuery(
     #
     qL = fpL if matchType in ["fingerprint-similarity"] else ssL
     rD = {}
-    for mr in fpL:
+    for mr in qL:
         ccId = mr.ccId.split("|")[0]
         rD[ccId] = max(rD[ccId], mr.fpScore) if ccId in rD else mr.fpScore
     rTupL = sorted(rD.items(), key=lambda kv: kv[1])

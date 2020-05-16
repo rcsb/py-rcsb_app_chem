@@ -7,5 +7,6 @@
   11-Apr-2020  - V0.15 Further updates in configuration bootstrap
   15-Apr-2020  - V0.16 Add fingerprint scores to descriptor return object
   16-Apr-2020  - V0.17 Reverse the delivered order for the descriptor search results
+  16-May-2020  - V0.18 Add preliminary depiction services
 
 

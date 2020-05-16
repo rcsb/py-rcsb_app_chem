@@ -12,8 +12,10 @@ import logging
 
 from fastapi import FastAPI
 
+from rcsb.utils.chem.ChemCompDepictWrapper import ChemCompDepictWrapper
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
+from . import depictTools
 from . import descriptorMatch
 from . import formulaMatch
 from . import serverStatus
@@ -38,7 +40,12 @@ async def startupEvent():
     ok1 = ccsw.readConfig()
     ok2 = ccsw.updateChemCompIndex(useCache=True)
     ok3 = ccsw.reloadSearchDatabase()
-    logger.info("Completed - loading dependcies status %r", ok1 and ok2 and ok3)
+    #
+    logger.info("Completed - loading search dependencies status %r", ok1 and ok2 and ok3)
+    ccdw = ChemCompDepictWrapper()
+    ok1 = ccdw.readConfig()
+    logger.info("Completed - loading depict dependencies status %r", ok1)
+    #
 
 
 @app.on_event("shutdown")
@@ -52,6 +59,10 @@ app.include_router(
 
 app.include_router(
     descriptorMatch.router, prefix="/chem-match-v1",
+)
+
+app.include_router(
+    depictTools.router, prefix="/chem-depict-v1",
 )
 
 app.include_router(serverStatus.router)

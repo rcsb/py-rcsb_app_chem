@@ -44,8 +44,8 @@ async def startupEvent():
     clChannel = os.environ.get("CHEM_SEARCH_UPDATE_CHANNEL", None)
     #
     logger.info("Dependence data host %r path %r update channel %r", clDataUrl, clDataPath, clChannel)
-    if clDataUrl and clDataPath and clChannel in ["A", "B"]:
-        ccsw.restoreDependencies("http://" + clDataUrl, clDataPath, bundleLabel=clChannel)
+    if clDataUrl and clDataPath and clChannel in ["A", "B", "a", "b"]:
+        ccsw.restoreDependencies("http://" + clDataUrl, clDataPath, bundleLabel=clChannel.upper())
     #
     ok1 = ccsw.readConfig()
     ok2 = ccsw.updateChemCompIndex(useCache=True)

@@ -9,6 +9,7 @@ __email__ = "john.westbrook@rcsb.org"
 __license__ = "Apache 2.0"
 
 import logging
+import os
 
 from fastapi import FastAPI
 
@@ -35,8 +36,17 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startupEvent():
-    logger.info("Startup - loading dependencies")
+    logger.info("Startup - loading search dependencies")
     ccsw = ChemCompSearchWrapper()
+    #
+    clDataUrl = os.environ.get("CHEM_SEARCH_DATA_HOSTNAME", None)
+    clDataPath = os.environ.get("CHEM_SEARCH_DATA_PATH", None)
+    clChannel = os.environ.get("CHEM_SEARCH_UPDATE_CHANNEL", None)
+    #
+    logger.info("Dependence data host %r path %r update channel %r", clDataUrl, clDataPath, clChannel)
+    if clDataUrl and clDataPath and clChannel in ["A", "B"]:
+        ccsw.restoreDependencies("http://" + clDataUrl, clDataPath, bundleLabel=clChannel)
+    #
     ok1 = ccsw.readConfig()
     ok2 = ccsw.updateChemCompIndex(useCache=True)
     ok3 = ccsw.reloadSearchDatabase()

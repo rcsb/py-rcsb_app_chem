@@ -3,7 +3,7 @@
 # Date: 11-May-2020 jdw
 #
 ##
-# QQpylint: skip-file
+# pylint: skip-file
 
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
@@ -19,7 +19,7 @@ from fastapi import APIRouter, Path, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 
-# QQpylint disable=no-name-in-module
+# pylint disable=no-name-in-module
 from pydantic import BaseModel, Field
 
 from rcsb.utils.chem.ChemCompDepictWrapper import ChemCompDepictWrapper

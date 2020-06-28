@@ -23,12 +23,12 @@ router = APIRouter()
 def serverStatus():
     ccsw = ChemCompSearchWrapper()
     ccsw.status()
-    return {"msg" "Service is up!"}
+    return {"msg": "Service is up!"}
 
 
 @router.get("/", tags=["status"])
 def rootServerStatus():
-    return {"msg" "Service is up!"}
+    return {"msg": "Service is up!"}
 
 
 @router.get("/hc", tags=["status"])

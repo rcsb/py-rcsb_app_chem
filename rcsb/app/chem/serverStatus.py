@@ -12,6 +12,8 @@ __license__ = "Apache 2.0"
 import logging
 from fastapi import APIRouter
 
+from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
+
 logger = logging.getLogger("app_chem")
 
 router = APIRouter()
@@ -19,9 +21,16 @@ router = APIRouter()
 
 @router.get("/status", tags=["status"])
 def serverStatus():
-    return {"msg": "Sevice is up!"}
+    ccsw = ChemCompSearchWrapper()
+    ccsw.status()
+    return {"msg" "Service is up!"}
 
 
 @router.get("/", tags=["status"])
 def rootServerStatus():
-    return {"msg": "Sevice is up!"}
+    return {"msg" "Service is up!"}
+
+
+@router.get("/hc", tags=["status"])
+def rootServerStatus():
+    return "UP"

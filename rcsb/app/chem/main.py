@@ -25,7 +25,9 @@ from . import serverStatus
 logger = logging.getLogger("app_chem")
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
-formatter = logging.Formatter("%(levelname)s:     %(asctime)s-%(module)s.%(funcName)s: %(message)s")
+# The following is a subset of the default gunicorn logging format
+formatter = logging.Formatter("%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s] %(message)s", "[%Y-%m-%d %H:%M:%S %z]")
+# formatter = logging.Formatter("%(levelname)s:     %(asctime)s-%(module)s.%(funcName)s: %(message)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 logger.propagate = False
@@ -55,6 +57,8 @@ async def startupEvent():
     ccdw = ChemCompDepictWrapper()
     ok1 = ccdw.readConfig()
     logger.info("Completed - loading depict dependencies status %r", ok1)
+    #
+    ccsw.status()
     #
 
 

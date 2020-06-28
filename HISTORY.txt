@@ -9,4 +9,5 @@
   16-Apr-2020  - V0.17 Reverse the delivered order for the descriptor search results
   16-May-2020  - V0.18 Add preliminary depiction services
   28-Jun-2020  - V0.19 Updated to access dependencies created by RCSB weekly update
+  28-Jun-2020  - V0.20 Add simple health check route, memory report on /status, and adjust looking to conform to gunicorn
 

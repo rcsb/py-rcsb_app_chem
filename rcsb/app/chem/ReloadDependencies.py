@@ -42,7 +42,7 @@ class ReloadDependencies(object):
         self.__ccFileNamePrefix = ccFileNamePrefix if ccFileNamePrefix else os.environ.get("CHEM_SEARCH_CC_PREFIX", "cc-full")
         logger.info("Starting at %s", time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
-    def shutdown(self):
+    def resourceInfo(self):
         unitS = "MB" if platform.system() == "Darwin" else "GB"
         rusageMax = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         logger.info("Maximum resident memory size %.4f %s", rusageMax / 10 ** 6, unitS)
@@ -86,5 +86,6 @@ class ReloadDependencies(object):
 
 if __name__ == "__main__":
     rmd = ReloadDependencies()
+    rmd.buildConfiguration()
     rmd.updateDependencies()
-    rmd.shutdown()
+    rmd.resourceInfo()

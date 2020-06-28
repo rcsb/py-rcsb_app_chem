@@ -53,7 +53,7 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
 
         rD = ReloadDependencies(self.__cachePath, self.__ccFileNamePrefix)
         rD.buildConfiguration(ccUrlTarget=ccUrlTarget, birdUrlTarget=birdUrlTarget)
-        rD.shutdown()
+        rD.resourceInfo()
         #
         logger.debug("Running tests on version %s", __version__)
         logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
@@ -72,7 +72,7 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
             rD = ReloadDependencies(self.__cachePath, self.__ccFileNamePrefix)
             ok = rD.updateDependencies()
             self.assertTrue(ok)
-            rD.shutdown()
+            rD.resourceInfo()
         except Exception as e:
             logger.exception("Failing with %s", str(e))
             self.fail()

@@ -4,4 +4,4 @@ fastapi[all]
 pydantic >= 1.4
 uvicorn
 rcsb.utils.io >= 0.69
-rcsb.utils.chem >= 0.36
+rcsb.utils.chem >= 0.37

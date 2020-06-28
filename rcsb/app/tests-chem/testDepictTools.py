@@ -67,7 +67,7 @@ class DepictToolsTests(unittest.TestCase):
                 response = client.get("/")
                 logger.info("Status %r response %r", response.status_code, response.json())
                 self.assertTrue(response.status_code == 200)
-                self.assertTrue(response.json() == {"msg": "Sevice is up!"})
+                self.assertTrue(response.json() == {"msg": "Service is up!"})
         except Exception as e:
             logger.exception("Failing with %s", str(e))
             self.fail()

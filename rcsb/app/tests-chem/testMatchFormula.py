@@ -44,6 +44,7 @@ class MatchFormulaTests(unittest.TestCase):
         self.__dataPath = os.path.join(HERE, "test-data")
         self.__cachePath = os.path.join(HERE, "test-output", "CACHE")
         os.environ["CHEM_SEARCH_CACHE_PATH"] = os.path.join(self.__cachePath)
+        os.environ["CHEM_DEPICT_CACHE_PATH"] = os.path.join(self.__cachePath)
         os.environ["CHEM_SEARCH_CC_PREFIX"] = "cc-full" if self.__testFlagFull else "cc-abbrev"
 
         self.__startTime = time.time()

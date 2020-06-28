@@ -25,9 +25,8 @@ import resource
 import time
 import unittest
 
-from rcsb.utils.chem import __version__
-from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
-from rcsb.utils.io.MarshalUtil import MarshalUtil
+from rcsb.app.chem import __version__
+from rcsb.app.chem.ReloadDependencies import ReloadDependencies
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -41,14 +40,21 @@ logger.setLevel(logging.INFO)
 class ChemCompSearchWrapperFixture(unittest.TestCase):
     def setUp(self):
         self.__startTime = time.time()
-        self.__testFlagFull = os.environ.get("CHEM_SEARCH_CC_PREFIX", "cc-abbrev") == "cc-full"
-        self.__workPath = os.path.join(HERE, "test-output")
-        self.__dataPath = os.path.join(HERE, "test-data")
+        configFlagFull = False
         self.__cachePath = os.path.join(HERE, "test-output", "CACHE")
-        # self.__buildTypeList = ["oe-iso-smiles", "oe-smiles", "cactvs-iso-smiles", "cactvs-smiles", "inchi"]
-        # Run the bootstrap configuration
-        self.__mU = MarshalUtil(workPath=self.__cachePath)
-        self.__testBootstrapConfig()
+        dataPath = os.path.join(HERE, "test-data")
+        if not configFlagFull:
+            self.__ccFileNamePrefix = "cc-abbrev"
+            ccUrlTarget = os.path.join(dataPath, "components-abbrev.cif") if not configFlagFull else None
+            birdUrlTarget = os.path.join(dataPath, "prdcc-abbrev.cif") if not configFlagFull else None
+        else:
+            self.__ccFileNamePrefix = "cc-full"
+            ccUrlTarget = birdUrlTarget = None
+
+        rD = ReloadDependencies(self.__cachePath, self.__ccFileNamePrefix)
+        rD.buildConfiguration(ccUrlTarget=ccUrlTarget, birdUrlTarget=birdUrlTarget)
+        rD.shutdown()
+        #
         logger.debug("Running tests on version %s", __version__)
         logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
@@ -59,103 +65,14 @@ class ChemCompSearchWrapperFixture(unittest.TestCase):
         endTime = time.time()
         logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
-    def __testBootstrapConfig(self):
-        """Test read/write search configuration.
-        """
-        try:
-            if self.__testFlagFull:
-                os.environ["CHEM_SEARCH_CACHE_PATH"] = os.path.join(self.__cachePath)
-                os.environ["CHEM_SEARCH_CC_PREFIX"] = "cc-full"
-                ccFileNamePrefix = "cc-full"
-                configDirPath = os.path.join(self.__cachePath, "config")
-                configFilePath = os.path.join(configDirPath, ccFileNamePrefix + "-config.json")
-                oeFileNamePrefix = "oe-full"
-                ccFileNamePrefix = "cc-full"
-                ccUrlTarget = None
-                birdUrlTarget = None
-            else:
-                os.environ["CHEM_SEARCH_CACHE_PATH"] = os.path.join(self.__cachePath)
-                os.environ["CHEM_SEARCH_CC_PREFIX"] = "cc-abbrev"
-                ccUrlTarget = os.path.join(self.__dataPath, "components-abbrev.cif")
-                birdUrlTarget = os.path.join(self.__dataPath, "prdcc-abbrev.cif")
-                ccFileNamePrefix = "cc-abbrev"
-                configDirPath = os.path.join(self.__cachePath, "config")
-                configFilePath = os.path.join(configDirPath, ccFileNamePrefix + "-config.json")
-                oeFileNamePrefix = "oe-abbrev"
-            #
-            molLimit = None
-            useCache = False
-            logSizes = False
-            #
-            numProc = 12
-            maxProc = os.cpu_count()
-            numProc = min(numProc, maxProc)
-            maxChunkSize = 10
-            logger.info("+++ >>> Using MAXPROC %d", numProc)
-            #
-            limitPerceptions = False
-            quietFlag = True
-            #
-            fpTypeCuttoffD = {"TREE": 0.6, "MACCS": 0.9, "PATH": 0.6, "CIRCULAR": 0.6, "LINGO": 0.9}
-            buildTypeList = ["oe-iso-smiles", "oe-smiles", "cactvs-iso-smiles", "cactvs-smiles", "inchi"]
-            #
-            oesmpKwargs = {
-                "ccUrlTarget": ccUrlTarget,
-                "birdUrlTarget": birdUrlTarget,
-                "cachePath": self.__cachePath,
-                "useCache": useCache,
-                "ccFileNamePrefix": ccFileNamePrefix,
-                "oeFileNamePrefix": oeFileNamePrefix,
-                "limitPerceptions": limitPerceptions,
-                "minCount": None,
-                "maxFpResults": 50,
-                "fpTypeCuttoffD": fpTypeCuttoffD,
-                "buildTypeList": buildTypeList,
-                "screenTypeList": None,
-                "quietFlag": quietFlag,
-                "numProc": numProc,
-                "maxChunkSize": maxChunkSize,
-                "molLimit": molLimit,
-                "logSizes": logSizes,
-            }
-            ccsiKwargs = {
-                "ccUrlTarget": ccUrlTarget,
-                "birdUrlTarget": birdUrlTarget,
-                "cachePath": self.__cachePath,
-                "useCache": useCache,
-                "ccFileNamePrefix": ccFileNamePrefix,
-                "oeFileNamePrefix": oeFileNamePrefix,
-                "limitPerceptions": limitPerceptions,
-                "minCount": None,
-                "numProc": numProc,
-                "quietFlag": quietFlag,
-                "maxChunkSize": maxChunkSize,
-                "molLimit": None,
-                "logSizes": False,
-            }
-            configD = {"versionNumber": 0.20, "ccsiKwargs": ccsiKwargs, "oesmpKwargs": oesmpKwargs}
-            self.__mU.mkdir(configDirPath)
-            self.__mU.doExport(configFilePath, configD, fmt="json", indent=3)
-        except Exception as e:
-            logger.exception("Failing with %s", str(e))
-            self.fail()
-
     def testUpdateDependencies(self):
-        """Test update search index.
+        """Test update search indices.
         """
         try:
-            ccsw = ChemCompSearchWrapper()
-            ok = ccsw.readConfig()
+            rD = ReloadDependencies(self.__cachePath, self.__ccFileNamePrefix)
+            ok = rD.updateDependencies()
             self.assertTrue(ok)
-            ok = ccsw.updateChemCompIndex()
-            self.assertTrue(ok)
-            ok = ccsw.updateSearchIndex()
-            self.assertTrue(ok)
-            ok = ccsw.updateSearchMoleculeProvider()
-            self.assertTrue(ok)
-            # verify access -
-            ok = ccsw.reloadSearchDatabase()
-            self.assertTrue(ok)
+            rD.shutdown()
         except Exception as e:
             logger.exception("Failing with %s", str(e))
             self.fail()

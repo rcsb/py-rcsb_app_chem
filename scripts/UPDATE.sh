@@ -11,5 +11,5 @@ echo "TOPDIR=${TOPDIR}"
 export CHEM_SEARCH_CC_PREFIX="cc-full"
 export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
 #
-python3.8 ${TOPDIR}/rcsb/app/chem/ReloadMatchDependencies.py
+python3.8 ${TOPDIR}/rcsb/app/chem/ReloadDependencies.py
 #

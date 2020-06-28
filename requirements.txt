@@ -3,5 +3,5 @@ OpenEye-toolkits==2019.10.2
 fastapi[all]
 pydantic >= 1.4
 uvicorn
-rcsb.utils.io >= 0.57
-rcsb.utils.chem >= 0.26
+rcsb.utils.io >= 0.69
+rcsb.utils.chem >= 0.36

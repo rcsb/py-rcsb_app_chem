@@ -16,6 +16,7 @@ THISPORT=80
 #
 export CHEM_SEARCH_CC_PREFIX="cc-full"
 export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
+export CHEM_DEPICT_CACHE_PATH=${TOPDIR}/CACHE
 #
 cd ${TOPDIR}
 python3.8 -m uvicorn --workers 2 --host ${THISIP} --port ${THISPORT} --reload --forwarded-allow-ips ${THISIP} rcsb.app.chem.main:app

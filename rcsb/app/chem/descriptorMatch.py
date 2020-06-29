@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
-logger = logging.getLogger("app_chem")
+logger = logging.getLogger(__name__)
 
 MatchResults = namedtuple("MatchResults", "ccId oeMol searchType matchOpts screenType fpType fpScore oeIdx formula", defaults=(None,) * 9)
 

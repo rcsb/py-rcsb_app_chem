@@ -22,15 +22,16 @@ from . import formulaMatch
 from . import serverStatus
 
 # ---
-logger = logging.getLogger("app_chem")
+logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
-# The following is a subset of the default gunicorn logging format
+# The following mimics the default Gunicorn logging format
 formatter = logging.Formatter("%(asctime)s [%(process)d] [%(levelname)s] [%(module)s.%(funcName)s] %(message)s", "[%Y-%m-%d %H:%M:%S %z]")
+# The following mimics the default Uvicorn logging format
 # formatter = logging.Formatter("%(levelname)s:     %(asctime)s-%(module)s.%(funcName)s: %(message)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-logger.propagate = False
+logger.propagate = True
 # ---
 
 app = FastAPI()

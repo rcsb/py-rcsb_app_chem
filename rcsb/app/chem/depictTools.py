@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field
 
 from rcsb.utils.chem.ChemCompDepictWrapper import ChemCompDepictWrapper
 
-logger = logging.getLogger("app_chem")
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 

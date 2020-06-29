@@ -14,7 +14,7 @@ from fastapi import APIRouter
 
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
-logger = logging.getLogger("app_chem")
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 

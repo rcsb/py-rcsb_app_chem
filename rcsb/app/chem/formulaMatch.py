@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field  # pylint disable=no-name-in-module
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 from rcsb.app.chem.ElementSymbol import ElementSymbol
 
-logger = logging.getLogger("app_chem")
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 

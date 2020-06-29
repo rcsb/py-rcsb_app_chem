@@ -10,4 +10,5 @@
   16-May-2020  - V0.18 Add preliminary depiction services
   28-Jun-2020  - V0.19 Updated to access dependencies created by RCSB weekly update
   28-Jun-2020  - V0.20 Add simple health check route, memory report on /status, and adjust looking to conform to gunicorn
+  29-Jun-2020  - V0.21 Add log filtering options to disable logging healthcheck requests
 

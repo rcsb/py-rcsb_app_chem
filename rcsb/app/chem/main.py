@@ -16,9 +16,11 @@ from fastapi import FastAPI
 from rcsb.utils.chem.ChemCompDepictWrapper import ChemCompDepictWrapper
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
+
 from . import depictTools
 from . import descriptorMatch
 from . import formulaMatch
+from . import LogFilterUtils
 from . import serverStatus
 
 # ---
@@ -32,6 +34,9 @@ formatter = logging.Formatter("%(asctime)s [%(process)d] [%(levelname)s] [%(modu
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 logger.propagate = True
+# Apply logging filters -
+lu = LogFilterUtils.LogFilterUtils()
+lu.addFilters()
 # ---
 
 app = FastAPI()
@@ -40,6 +45,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startupEvent():
     logger.info("Startup - loading search dependencies")
+    #
     ccsw = ChemCompSearchWrapper()
     #
     clDataUrl = os.environ.get("CHEM_SEARCH_DATA_HOSTNAME", None)

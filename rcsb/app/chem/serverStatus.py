@@ -31,6 +31,6 @@ def rootServerStatus():
     return {"msg": "Service is up!"}
 
 
-@router.get("/hc", tags=["status"])
+@router.get("/healthcheck", tags=["status"])
 def rootHealthCheck():
     return "UP"

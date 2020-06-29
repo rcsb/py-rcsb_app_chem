@@ -37,6 +37,3 @@ rcsb.app.chem.main:app \
     --capture-output \
     --enable-stdio-inheritance
 #
-# Was not able to get the following subclass of the Gunicorn logger working properly.
-# --logger-class rcsb.app.chem.LogFilter.LogFilter \
-#

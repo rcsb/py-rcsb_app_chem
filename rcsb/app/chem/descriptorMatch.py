@@ -46,7 +46,10 @@ class DescriptorQuery(BaseModel):
     query: str = Field(None, title="Descriptor string", description="SMILES or InChI chemical descriptor", example="c1ccc(cc1)[C@@H](C(=O)O)N")
     # generator: str = Field(None, title="Descriptor generator", description="Program or agent generating the descriptor", example="OpenEye Toolkit")
     matchType: DescriptorMatchType = Field(
-        None, title="Query match type", description="Qualitative graph matching comparison or fingerprint comparison criteria", example="graph-relaxed"
+        None,
+        title="Query match type",
+        description="Graph matching comparison: graph-strict (atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry), graph-relaxed (atom type, formal charge, bond type), graph-relaxed-stereo (atom type, formal charge, bond type, atom/bond stereochemistry) or fingerprint-similarity (TREE and MACCS)",
+        example="graph-relaxed",
     )
 
 

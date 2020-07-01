@@ -48,7 +48,12 @@ class DescriptorQuery(BaseModel):
     matchType: DescriptorMatchType = Field(
         None,
         title="Query match type",
-        description="Graph matching comparison: graph-strict (atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry), graph-relaxed (atom type, formal charge, bond type), graph-relaxed-stereo (atom type, formal charge, bond type, atom/bond stereochemistry) or fingerprint-similarity (TREE and MACCS)",
+        description="""Graph matching comparison:
+            graph-strict (atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
+            graph-relaxed (atom type, formal charge, bond type),
+            graph-relaxed-stereo (atom type, formal charge, bond type, atom/bond stereochemistry),
+            or fingerprint-similarity (TREE and MACCS)
+        """,
         example="graph-relaxed",
     )
 

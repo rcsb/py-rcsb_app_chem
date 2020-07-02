@@ -12,4 +12,5 @@
   28-Jun-2020  - V0.20 Add simple health check route, memory report on /status, and adjust looking to conform to gunicorn
   29-Jun-2020  - V0.21 Add log filtering options to disable logging healthcheck requests
    1-Jul-2020  - V0.22 Update documentation and dependencies
+   1-Jul-2020  - V0.23 Further update of dependencies
 

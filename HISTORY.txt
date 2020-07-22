@@ -13,4 +13,4 @@
   29-Jun-2020  - V0.21 Add log filtering options to disable logging healthcheck requests
    1-Jul-2020  - V0.22 Update documentation and dependencies
    1-Jul-2020  - V0.23 Further update of dependencies
-
+  22-Jul-2020  - V0.24 Restore missing dev packages from fastapi[all]

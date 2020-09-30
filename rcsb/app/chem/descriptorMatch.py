@@ -93,7 +93,8 @@ def matchGetQuery(
 
 @router.post("/{descriptorType}", response_model=DescriptorQueryResult, tags=["descriptor"])
 def matchPostQuery(
-    query: DescriptorQuery, descriptorType: DescriptorType = Path(..., title="Descriptor type", description="Type of chemical descriptor (SMILES or InChI)", example="SMILES"),
+    query: DescriptorQuery,
+    descriptorType: DescriptorType = Path(..., title="Descriptor type", description="Type of chemical descriptor (SMILES or InChI)", example="SMILES"),
 ):
 
     logger.info("Got %r %r", descriptorType, query)

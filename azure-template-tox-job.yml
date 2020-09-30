@@ -133,10 +133,10 @@ jobs:
     - script: "python -c \"import sys; print(sys.version); print(sys.executable)\""
       displayName: show python information
     #
-    - script: python -m pip install --upgrade pip tox
+    - script: python -m pip --use-feature=2020-resolver install --upgrade pip tox
       displayName: 'Install tools'
       #
-    - script: pip install -r requirements.txt
+    - script: pip  --use-feature=2020-resolver install -r requirements.txt
       displayName: 'Install dependencies'
     #
     #
@@ -174,7 +174,7 @@ jobs:
     #  Build artifacts if this is a test target (i.e. labeled as py##)
     #
     - ${{ if startsWith(parameters.tox, 'py') }}:
-      - script: pip install --upgrade pip twine setuptools wheel
+      - script: pip --use-feature=2020-resolver install --upgrade pip twine setuptools wheel
         displayName: "Acquire build tools"
       - script: python setup.py  sdist --dist-dir "$(System.DefaultWorkingDirectory)/dist"
         displayName: "Build source dist"

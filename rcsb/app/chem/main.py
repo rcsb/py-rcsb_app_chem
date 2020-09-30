@@ -75,15 +75,18 @@ def shutdownEvent():
 
 
 app.include_router(
-    formulaMatch.router, prefix="/chem-match-v1",
+    formulaMatch.router,
+    prefix="/chem-match-v1",
 )
 
 app.include_router(
-    descriptorMatch.router, prefix="/chem-match-v1",
+    descriptorMatch.router,
+    prefix="/chem-match-v1",
 )
 
 app.include_router(
-    depictTools.router, prefix="/chem-depict-v1",
+    depictTools.router,
+    prefix="/chem-depict-v1",
 )
 
 app.include_router(serverStatus.router)

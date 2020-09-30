@@ -50,8 +50,7 @@ class ReloadDependencies(object):
         logger.info("Completed at %s (%.4f seconds)", time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def buildConfiguration(self, ccUrlTarget=None, birdUrlTarget=None):
-        """ Build bootstrap configuration files
-        """
+        """Build bootstrap configuration files"""
 
         try:
             configFlagFull = self.__ccFileNamePrefix == "cc-full"
@@ -67,8 +66,7 @@ class ReloadDependencies(object):
         return False
 
     def updateDependencies(self):
-        """ Rebuild search indices using configuration files.
-        """
+        """Rebuild search indices using configuration files."""
         try:
             logger.info("Starting update %r in %r", self.__ccFileNamePrefix, self.__cachePath)
             ccsw = ChemCompSearchWrapper(cachePath=self.__cachePath, ccFileNamePrefix=self.__ccFileNamePrefix)

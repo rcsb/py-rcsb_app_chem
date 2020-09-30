@@ -15,3 +15,4 @@
    1-Jul-2020  - V0.23 Further update of dependencies
   22-Jul-2020  - V0.24 Restore missing dev packages from fastapi[all]
   29-Sep-2020  - V0.25 Pin fastapi dependencies
+  30-Sep-2020  - V0.26 Further updates on dependencies.

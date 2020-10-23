@@ -59,8 +59,9 @@ async def startupEvent():
     ok1 = ccsw.readConfig()
     ok2 = ccsw.updateChemCompIndex(useCache=True)
     ok3 = ccsw.reloadSearchDatabase()
+    ok4 = ccsw.updateSearchIndex(useCache=True)
     #
-    logger.info("Completed - loading search dependencies status %r", ok1 and ok2 and ok3)
+    logger.info("Completed - loading search dependencies status %r", ok1 and ok2 and ok3 and ok4)
     ccdw = ChemCompDepictWrapper()
     ok1 = ccdw.readConfig()
     logger.info("Completed - loading depict dependencies status %r", ok1)

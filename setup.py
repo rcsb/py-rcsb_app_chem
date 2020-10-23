@@ -42,12 +42,11 @@ setup(
     #
     install_requires=[
         "fastapi[all] == 0.61.1",
+        "pydantic == 1.6.1",
         "aiofiles == 0.5.0",
-        "uvicorn == 0.11.8",
-        "pydantic >= 1.4",
-        "rcsb.utils.io >= 0.69",
-        "rcsb.utils.chem >= 0.39",
         "gunicorn == 20.0.4",
+        "rcsb.utils.io >= 0.77",
+        "rcsb.utils.chem >= 0.43",
     ],
     packages=find_packages(exclude=["rcsb.app.tests-*", "tests.*"]),
     package_data={

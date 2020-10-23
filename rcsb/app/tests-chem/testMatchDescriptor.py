@@ -61,8 +61,7 @@ class MatchDescriptorTests(unittest.TestCase):
         logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testOne(self):
-        """ Get root path (service alive example).
-        """
+        """Get root path (service alive example)."""
         try:
             with TestClient(app) as client:
                 response = client.get("/")
@@ -77,7 +76,10 @@ class MatchDescriptorTests(unittest.TestCase):
         try:
             smi = "CC[C@H](C)[C@@H](C(=O)N[C@@H](CC(C)C)C(=O)O)NC(=O)[C@H](Cc1ccccc1)CC(=O)NO"
             with TestClient(app) as client:
-                response = client.post("/chem-match-v1/SMILES", json={"query": smi, "matchType": "graph-relaxed", "generator": "ME"},)
+                response = client.post(
+                    "/chem-match-v1/SMILES",
+                    json={"query": smi, "matchType": "graph-relaxed", "generator": "ME"},
+                )
                 logger.info("Status %r response %r", response.status_code, response.json())
                 self.assertTrue(response.status_code == 200)
                 rD = response.json()
@@ -92,7 +94,7 @@ class MatchDescriptorTests(unittest.TestCase):
         try:
             smi = "CC[C@H](C)[C@@H](C(=O)N[C@@H](CC(C)C)C(=O)O)NC(=O)[C@H](Cc1ccccc1)CC(=O)NO"
             with TestClient(app) as client:
-                response = client.get("/chem-match-v1/SMILES", params={"query": smi, "matchType": "graph-relaxed", "generator": "ME"})
+                response = client.get("/chem-match-v1/SMILES", params={"query": smi, "matchType": "sub-struct-graph-relaxed", "generator": "ME"})
                 logger.info("Status %r response %r", response.status_code, response.json())
                 self.assertTrue(response.status_code == 200)
                 rD = response.json()

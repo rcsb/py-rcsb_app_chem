@@ -16,3 +16,4 @@
   22-Jul-2020  - V0.24 Restore missing dev packages from fastapi[all]
   29-Sep-2020  - V0.25 Pin fastapi dependencies
   30-Sep-2020  - V0.26 Further updates on dependencies.
+  23-Oct-2020  - V0.27 Add substructure search options

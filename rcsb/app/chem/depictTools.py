@@ -2,6 +2,8 @@
 # File: depictTools.py
 # Date: 11-May-2020 jdw
 #
+# Updates:
+#
 ##
 # pylint: skip-file
 
@@ -98,7 +100,7 @@ def depictAlignGet(
     ),
     fitIdentifier: str = Query(None, title="Fit molecule identifier", description="Fit molecule Chemical Component or BIRD identifier", example="ATP"),
     fitIdentifierType: MoleculeIdentifierType = Query(
-        ..., title="Fit molecule identifier type", description="Fit molecule identifier type (SMILES, InChI or PDB identifier)", example="IndentifierPDB"
+        ..., title="Fit molecule identifier type", description="Fit molecule identifier type (SMILES, InChI or PDB identifier)", example="IdentifierPDB"
     ),
     displayStyle: DisplayStyle = Query(None, title="Display style", description="", example="labeled"),
 ):

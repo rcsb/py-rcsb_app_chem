@@ -2,6 +2,8 @@
 # File: descriptionMatch.py
 # Date: 13-Mar-2020 jdw
 #
+# Updates:
+#   23-Oct-2020 jdw add substructure search options
 ##
 # pylint: skip-file
 
@@ -40,6 +42,9 @@ class DescriptorMatchType(str, Enum):
     relaxedStereo = "graph-relaxed-stereo"
     strict = "graph-strict"
     fuzzy = "fingerprint-similarity"
+    relaxedSubStructure = "sub-struct-graph-relaxed"
+    relaxedStereoSubStructure = "sub-struct-graph-relaxed-stereo"
+    strictSubStructure = "sub-struct-graph-strict"
 
 
 class DescriptorQuery(BaseModel):
@@ -48,11 +53,14 @@ class DescriptorQuery(BaseModel):
     matchType: DescriptorMatchType = Field(
         None,
         title="Query match type",
-        description="""Graph matching comparison:
-            graph-strict (atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
-            graph-relaxed (atom type, formal charge, bond type),
-            graph-relaxed-stereo (atom type, formal charge, bond type, atom/bond stereochemistry),
-            or fingerprint-similarity (TREE and MACCS)
+        description="""Graph matching, fingerprint similarity and substructure search:
+            graph-strict (with fingerprint prefilter) (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
+            graph-relaxed (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type),
+            graph-relaxed-stereo (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type, atom/bond stereochemistry),
+            fingerprint-similarity (TREE and MACCS),
+            sub-struct-graph-strict (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
+            sub-struct-graph-relaxed (match criteria: atom type, formal charge, bond type),
+            sub-struct-graph-relaxed-stereo (match criteria: atom type, formal charge, bond type, atom/bond stereochemistry),
         """,
         example="graph-relaxed",
     )
@@ -77,8 +85,8 @@ def matchGetQuery(
     logger.info("Got %r %r %r", descriptorType, query, matchType)
     # ---
     ccsw = ChemCompSearchWrapper()
-    retStatus, ssL, fpL = ccsw.matchByDescriptor(query, descriptorType, matchOpts=matchType)
-    logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
+    retStatus, ssL, fpL = ccsw.searchByDescriptor(query, descriptorType, matchOpts=matchType)
+    logger.info("Result (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
     qL = fpL if matchType in ["fingerprint-similarity"] else ssL
     rD = {}
     for mr in qL:
@@ -103,7 +111,7 @@ def matchPostQuery(
     matchType = qD["matchType"] if "matchType" in qD and qD["matchType"] else "graph-relaxed"
     # ---
     ccsw = ChemCompSearchWrapper()
-    retStatus, ssL, fpL = ccsw.matchByDescriptor(qD["query"], descriptorType, matchOpts=matchType)
+    retStatus, ssL, fpL = ccsw.searchByDescriptor(qD["query"], descriptorType, matchOpts=matchType)
     logger.info("Results (%r) ssL (%d) fpL (%d)", retStatus, len(ssL), len(fpL))
     #
     qL = fpL if matchType in ["fingerprint-similarity"] else ssL

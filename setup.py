@@ -45,8 +45,8 @@ setup(
         "pydantic == 1.6.1",
         "aiofiles == 0.5.0",
         "gunicorn == 20.0.4",
-        "rcsb.utils.io >= 0.77",
-        "rcsb.utils.chem >= 0.43",
+        "rcsb.utils.io >= 0.92",
+        "rcsb.utils.chem >= 0.45",
     ],
     packages=find_packages(exclude=["rcsb.app.tests-*", "tests.*"]),
     package_data={

@@ -16,7 +16,7 @@ from fastapi import FastAPI
 from rcsb.utils.chem.ChemCompDepictWrapper import ChemCompDepictWrapper
 from rcsb.utils.chem.ChemCompSearchWrapper import ChemCompSearchWrapper
 
-
+from . import convertTools
 from . import depictTools
 from . import descriptorMatch
 from . import formulaMatch
@@ -88,6 +88,11 @@ app.include_router(
 app.include_router(
     depictTools.router,
     prefix="/chem-depict-v1",
+)
+
+app.include_router(
+    convertTools.router,
+    prefix="/chem-convert-v1",
 )
 
 app.include_router(serverStatus.router)

@@ -1,7 +1,7 @@
 ##
-# File:    testDepictTools.py
+# File:    testConvertTools.py
 # Author:  J. Westbrook
-# Date:    11-May-2020
+# Date:    10-Dec-2020
 # Version: 0.001
 #
 # Update:
@@ -9,7 +9,7 @@
 #
 ##
 """
-Tests for descriptor depiction api.
+Tests for descriptor and chemical componen conversion api.
 
 """
 
@@ -37,7 +37,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-class DepictToolsTests(unittest.TestCase):
+class ConvertToolsTests(unittest.TestCase):
     def setUp(self):
         self.__testFlagFull = False
         self.__workPath = os.path.join(HERE, "test-output")
@@ -71,13 +71,13 @@ class DepictToolsTests(unittest.TestCase):
             logger.exception("Failing with %s", str(e))
             self.fail()
 
-    def testDepictPost(self):
+    def testToMolFilePost(self):
         try:
             smi = "CC[C@H](C)[C@@H](C(=O)N[C@@H](CC(C)C)C(=O)O)NC(=O)[C@H](Cc1ccccc1)CC(=O)NO"
             with TestClient(app) as client:
                 response = client.post(
-                    "/chem-depict-v1/molecule/SMILES",
-                    json={"target": smi, "displayStyle": "unlabeled"},
+                    "/chem-convert-v1/to-molfile/SMILES",
+                    json={"target": smi, "fmt": "mol"},
                 )
                 logger.info("Response status %r", response.status_code)
                 self.assertTrue(response.status_code == 200)
@@ -86,11 +86,11 @@ class DepictToolsTests(unittest.TestCase):
             logger.exception("Failing with %s", str(e))
             self.fail()
 
-    def testDepictGet(self):
+    def testToMolFileGet(self):
         try:
             smi = "CC[C@H](C)[C@@H](C(=O)N[C@@H](CC(C)C)C(=O)O)NC(=O)[C@H](Cc1ccccc1)CC(=O)NO"
             with TestClient(app) as client:
-                response = client.get("/chem-depict-v1/molecule/SMILES", params={"target": smi, "displayStyle": "labeled"})
+                response = client.get("/chem-convert-v1/to-molfile/SMILES", params={"target": smi})
                 logger.info("Response status %r", response.status_code)
                 self.assertTrue(response.status_code == 200)
                 logger.debug("Response info %r ", dir(response))
@@ -98,11 +98,11 @@ class DepictToolsTests(unittest.TestCase):
             logger.exception("Failing with %s", str(e))
             self.fail()
 
-    def testDepictIdentifierGet(self):
+    def testToMolFileIdentifierGet(self):
         try:
             pdbId = "001"
             with TestClient(app) as client:
-                response = client.get("/chem-depict-v1/molecule/IdentifierPDB", params={"target": pdbId, "displayStyle": "unlabeled"})
+                response = client.get("/chem-convert-v1/to-molfile/IdentifierPDB", params={"target": pdbId})
                 logger.info("Response status %r", response.status_code)
                 self.assertTrue(response.status_code == 200)
                 logger.debug("Response info %r ", dir(response))
@@ -110,35 +110,13 @@ class DepictToolsTests(unittest.TestCase):
             logger.exception("Failing with %s", str(e))
             self.fail()
 
-    def testDepictIdentifierPost(self):
+    def testToMolFileIdentifierPost(self):
         try:
             pdbId = "002"
             with TestClient(app) as client:
                 response = client.post(
-                    "/chem-depict-v1/molecule/IdentifierPDB",
-                    json={"target": pdbId, "displayStyle": "labeled"},
-                )
-                logger.info("Response status %r", response.status_code)
-                self.assertTrue(response.status_code == 200)
-                logger.debug("Response info %r ", dir(response))
-        except Exception as e:
-            logger.exception("Failing with %s", str(e))
-            self.fail()
-
-    def testAlignPairGet(self):
-        try:
-            refId = "002"
-            fitId = "002|4cc1cfac389d4bcf5975c58f9dea938553da026e56cf782763454142490197dd"
-            with TestClient(app) as client:
-                response = client.get(
-                    "/chem-depict-v1/alignpair",
-                    params={
-                        "referenceIdentifier": refId,
-                        "referenceIdentifierType": "IdentifierPDB",
-                        "fitIdentifier": fitId,
-                        "fitIdentifierType": "IdentifierPDB",
-                        "displayStyle": "labeled",
-                    },
+                    "/chem-convert-v1/to-molfile/IdentifierPDB",
+                    json={"target": pdbId, "fmt": "sdf"},
                 )
                 logger.info("Response status %r", response.status_code)
                 self.assertTrue(response.status_code == 200)
@@ -150,11 +128,10 @@ class DepictToolsTests(unittest.TestCase):
 
 def apiSimpleTests():
     suiteSelect = unittest.TestSuite()
-    suiteSelect.addTest(DepictToolsTests("testDepictPost"))
-    suiteSelect.addTest(DepictToolsTests("testDepictGet"))
-    suiteSelect.addTest(DepictToolsTests("testDepictIdentifierGet"))
-    suiteSelect.addTest(DepictToolsTests("testDepictIdentifierPost"))
-    suiteSelect.addTest(DepictToolsTests("testAlignPairGet"))
+    suiteSelect.addTest(ConvertToolsTests("testToMolFilePost"))
+    suiteSelect.addTest(ConvertToolsTests("testToMolFileGet"))
+    suiteSelect.addTest(ConvertToolsTests("testToMolFileIdentifierGet"))
+    suiteSelect.addTest(ConvertToolsTests("testToMolFileIdentifierPost"))
     return suiteSelect
 
 

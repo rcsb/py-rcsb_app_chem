@@ -24,4 +24,4 @@ export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
 export CHEM_DEPICT_CACHE_PATH=${TOPDIR}/CACHE
 #
 cd ${TOPDIR}
-python3.8 -m uvicorn --host ${THISIP} --port ${THISPORT} --reload rcsb.app.chem.main:app
+python3 -m uvicorn --host ${THISIP} --port ${THISPORT} --reload rcsb.app.chem.main:app

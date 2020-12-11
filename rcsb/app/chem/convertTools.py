@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-class MoleculeIdentifierType(str, Enum):
+class ConvertIdentifierType(str, Enum):
     smiles = "SMILES"
     inchi = "InChI"
     identifierPdb = "IdentifierPDB"
@@ -49,36 +49,40 @@ class ConvertMoleculeIdentifier(BaseModel):
     fmt: MoleculeFormatType = Field(None, title="Molecule format", description="Molecule format type (mol, sdf, mol2, mol2h)", example="mol")
 
 
-@router.get("/to-molfile/{moleculeIdentifierType}", tags=["convert"])
+@router.get("/to-molfile/{convertIdentifierType}", tags=["convert"])
 def toMolFileGet(
     target: str = Query(None, title="Target molecule identifier", description="SMILES, InChI or PDB identifier", example="c1ccc(cc1)[C@@H](C(=O)O)N"),
     fmt: MoleculeFormatType = Query(None, title="Molecule format type", description="Molecule format type (mol, sdf, mol2, mol2h)", example="mol"),
-    moleculeIdentifierType: MoleculeIdentifierType = Path(
+    convertIdentifierType: ConvertIdentifierType = Path(
         ..., title="Molecule identifier type", description="Molecule identifier type (SMILES, InChI or PDB identifier)", example="SMILES"
     ),
 ):
-    logger.debug("Got %r %r %r", moleculeIdentifierType, target, fmt)
+    logger.debug("Got %r %r %r", convertIdentifierType, target, fmt)
     # ---
     fmt = fmt.lower() if fmt else "mol"
     ccdw = ChemCompDepictWrapper()
-    molfilePath = ccdw.toMolFile(target, moleculeIdentifierType, fmt=fmt)
+    molfilePath = ccdw.toMolFile(target, convertIdentifierType, fmt=fmt)
+    mimeTypeD = {"mol": "chemical/x-mdl-molfile", "sdf": "chemical/x-mdl-sdfile", "mol2": "chemical/x-mol2", "mol2h": "chemical/x-mol2"}
+    mType = mimeTypeD[fmt]
     # ---
-    return FileResponse(molfilePath, media_type="chemical/x-mdl-molfile")
+    return FileResponse(molfilePath, media_type=mType)
 
 
-@router.post("/to-molfile/{moleculeIdentifierType}", tags=["convert"])
+@router.post("/to-molfile/{convertIdentifierType}", tags=["convert"])
 def toMolFilePost(
     target: ConvertMoleculeIdentifier,
-    moleculeIdentifierType: MoleculeIdentifierType = Path(
+    convertIdentifierType: ConvertIdentifierType = Path(
         ..., title="Molecule identifier type", description="Type of molecule identifier (SMILES, InChI or PDB identifier)", example="SMILES"
     ),
 ):
     qD = jsonable_encoder(target)
     logger.debug("qD %r", qD)
     fmt = qD["fmt"].lower() if "fmt" in qD and qD["fmt"] else "mol"
-    logger.debug("Got %r %r %r", moleculeIdentifierType, target, fmt)
+    logger.debug("Got %r %r %r", convertIdentifierType, target, fmt)
     # --
     ccdw = ChemCompDepictWrapper()
-    molfilePath = ccdw.toMolFile(qD["target"], moleculeIdentifierType, fmt=fmt)
+    molfilePath = ccdw.toMolFile(qD["target"], convertIdentifierType, fmt=fmt)
+    mimeTypeD = {"mol": "chemical/x-mdl-molfile", "sdf": "chemical/x-mdl-sdfile", "mol2": "chemical/x-mol2", "mol2h": "chemical/x-mol2"}
+    mType = mimeTypeD[fmt]
     # ---
-    return FileResponse(molfilePath, media_type="chemical/x-mdl-molfile")
+    return FileResponse(molfilePath, media_type=mType)

@@ -27,8 +27,8 @@ git clone ${GITPATH}
 cd ${SERVICE_PATH}
 # git checkout development
 #
-/usr/local/bin/pip3.8 install -r requirements.txt
-/usr/local/bin/pip3.8 install gunicorn
+/usr/local/bin/pip3.9 install -r requirements.txt
+/usr/local/bin/pip3.9 install gunicorn
 #
 export CHEM_SEARCH_DATA_HOSTNAME="bl-${CHEM_SEARCH_CLOUD_INSTANCE}.rcsb.org"
 export CHEM_SEARCH_DATA_PATH="4-coastal"

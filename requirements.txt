@@ -3,8 +3,8 @@ OpenEye-toolkits == 2020.2.0
 fastapi == 0.63.0
 pydantic == 1.7.3
 gunicorn == 20.0.4
-rcsb.utils.io >= 0.97
-rcsb.utils.chem >= 0.52
+rcsb.utils.io >= 1.00
+rcsb.utils.chem >= 0.62
 #
 # Used by FastAPI / Starlette / Pydantic:
 requests >=2.24.0,<3.0.0

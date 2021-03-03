@@ -23,3 +23,4 @@
   29-Jan-2021  - V0.31 Add CORS headers and adopt to explict fastapi dependencies
   29-Jan-2021  - V0.32 Update macos package dependencies
   29-Jan-2021  - V0.33 Adjust CORS options configuration
+   3-Mar-2021  - V0.34 Update search criteria and update dependencies

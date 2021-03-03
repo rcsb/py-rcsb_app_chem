@@ -51,6 +51,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# http --verbose OPTIONS :8000/status  Access-Control-Request-Method:GET Origin:https://id-localtest.mydomain.co
 
 
 @app.on_event("startup")

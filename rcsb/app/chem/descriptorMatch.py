@@ -38,10 +38,12 @@ class DescriptorType(str, Enum):
 
 
 class DescriptorMatchType(str, Enum):
+    exact = "graph-exact"
     relaxed = "graph-relaxed"
     relaxedStereo = "graph-relaxed-stereo"
     strict = "graph-strict"
     fuzzy = "fingerprint-similarity"
+    exactSubStructure = "sub-struct-graph-exact"
     relaxedSubStructure = "sub-struct-graph-relaxed"
     relaxedStereoSubStructure = "sub-struct-graph-relaxed-stereo"
     strictSubStructure = "sub-struct-graph-strict"
@@ -54,13 +56,15 @@ class DescriptorQuery(BaseModel):
         None,
         title="Query match type",
         description="""Graph matching, fingerprint similarity and substructure search:
-            graph-strict (with fingerprint prefilter) (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
-            graph-relaxed (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type),
-            graph-relaxed-stereo (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type, atom/bond stereochemistry),
+            graph-exact (with fingerprint prefilter) (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry, degree, ring membersip, hydrogen count),
+            graph-strict (with fingerprint prefilter) (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry, degree, ring membersip),
+            graph-relaxed (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type, aromaticity),
+            graph-relaxed-stereo (with fingerprint prefilter) (match criteria: atom type, formal charge, bond type, aromaticity, atom/bond stereochemistry),
             fingerprint-similarity (TREE and MACCS),
-            sub-struct-graph-strict (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry),
-            sub-struct-graph-relaxed (match criteria: atom type, formal charge, bond type),
-            sub-struct-graph-relaxed-stereo (match criteria: atom type, formal charge, bond type, atom/bond stereochemistry),
+            sub-struct-graph-exact (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry, degree, ring membersip, hydrogen count),
+            sub-struct-graph-strict (match criteria: atom type, formal charge, aromaticity, bond order, atom/bond stereochemistry, degree, ring membersip),
+            sub-struct-graph-relaxed (match criteria: atom type, formal charge, bond type, aromaticity,),
+            sub-struct-graph-relaxed-stereo (match criteria: atom type, formal charge, bond type, aromaticity, atom/bond stereochemistry),
         """,
         example="graph-relaxed",
     )

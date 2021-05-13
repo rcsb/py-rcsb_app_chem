@@ -42,7 +42,7 @@ setup(
     #
     install_requires=[
         "fastapi == 0.63.0",
-        "pydantic == 1.7.3",
+        "pydantic == 1.7.4",
         "aiofiles >=0.5.0,<=0.6.0",
         "gunicorn == 20.0.4",
         "rcsb.utils.io >= 1.00",

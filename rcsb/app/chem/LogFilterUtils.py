@@ -4,6 +4,7 @@
 #
 # Pre-filter for Gunicorn/Uvicorn health check requests -
 ##
+# pylint disable=no-member
 import logging
 
 logger = logging.getLogger(__name__)

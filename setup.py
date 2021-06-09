@@ -15,6 +15,14 @@ thisPackage = "rcsb.app.chem"
 with open("rcsb/app/chem/__init__.py", "r") as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
 
+
+# Load packages from requirements*.txt
+with open("requirements.txt", "r") as ifh:
+    packagesRequired = [ln.strip() for ln in ifh.readlines()]
+
+with open("README.md", "r") as ifh:
+    longDescription = ifh.read()
+
 if not version:
     raise RuntimeError("Cannot find version information")
 
@@ -22,7 +30,8 @@ setup(
     name=thisPackage,
     version=version,
     description="RCSB Chemical Search Service",
-    long_description="See:  README.md",
+    long_description_content_type="text/markdown",
+    long_description=longDescription,
     author="John Westbrook",
     author_email="john.westbrook@rcsb.org",
     url="https://github.com/rcsb/py-rcsb_app_chem",
@@ -40,21 +49,7 @@ setup(
     ),
     entry_points={"console_scripts": []},
     #
-    install_requires=[
-        "fastapi == 0.63.0",
-        "pydantic == 1.7.3",
-        "aiofiles >=0.5.0,<=0.6.0",
-        "gunicorn == 20.0.4",
-        "rcsb.utils.io >= 1.00",
-        "rcsb.utils.chem >= 0.62",
-        "requests >=2.24.0,<3.0.0",
-        "jinja2 >=2.11.2,<3.0.0",
-        "python-multipart >=0.0.5,<0.0.6",
-        "ujson >=3.0.0,<4.0.0",
-        "uvicorn[standard] >=0.12.0,<0.14.0",
-        "async_exit_stack >=1.0.1,<2.0.0",
-        "async_generator >=1.10,<2.0.0",
-    ],
+    install_requires=packagesRequired[1:],
     packages=find_packages(exclude=["rcsb.app.tests-*", "tests.*"]),
     package_data={
         # If any package contains *.md or *.rst ...  files, include them:

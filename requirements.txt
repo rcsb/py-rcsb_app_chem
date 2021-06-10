@@ -1,6 +1,6 @@
 --extra-index-url https://pypi.anaconda.org/OpenEye/simple
 OpenEye-toolkits == 2020.2.2
-fastapi == 0.63.0
+fastapi == 0.65.2
 pydantic == 1.7.4
 gunicorn == 20.0.4
 rcsb.utils.io >= 1.12

@@ -4,7 +4,7 @@
 #
 # Pre-filter for Gunicorn/Uvicorn health check requests -
 ##
-# pylint disable=no-member
+# pylint: disable=E1101
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,8 +20,8 @@ class LogFilterUtils(object):
         pass
 
     def addFilters(self):
-        logger.debug("Current loggers are: %r", [name for name in logging.root.manager.loggerDict])
-        for name in logging.root.manager.loggerDict:
+        logger.debug("Current loggers are: %r", [name for name in logging.root.manager.loggerDict])  # pylint: disable=no-member
+        for name in logging.root.manager.loggerDict:  # pylint: disable=no-member
             if any(x in name for x in ["uvicorn", "gunicorn"]):
                 logger.debug("Add filter to logger %r", name)
                 loggerT = logging.getLogger(name)

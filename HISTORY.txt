@@ -25,3 +25,4 @@
   29-Jan-2021  - V0.33 Adjust CORS options configuration
    3-Mar-2021  - V0.34 Update search criteria and update dependencies
    9-Jun-2021  - V0.35 Update installation configuration and update dependencies
+  10-Aug-2021  - V0.37 Update FastAPI dependencies

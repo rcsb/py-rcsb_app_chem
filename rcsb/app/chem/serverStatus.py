@@ -33,4 +33,9 @@ def rootServerStatus():
 
 @router.get("/healthcheck", tags=["status"])
 def rootHealthCheck():
-    return "UP"
+    return True
+
+
+@router.get("/alive", tags=["status"])
+def rootAliveCheck():
+    return True

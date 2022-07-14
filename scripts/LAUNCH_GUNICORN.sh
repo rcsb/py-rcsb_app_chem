@@ -24,7 +24,9 @@ export CHEM_SEARCH_CC_PREFIX="cc-full"
 export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
 export CHEM_DEPICT_CACHE_PATH=${TOPDIR}/CACHE
 #
-cd ${TOPDIR}
+export GIT_PYTHON_REFRESH=quiet
+#
+cd ${HERE}
 gunicorn \
 rcsb.app.chem.main:app \
     --timeout 300 \

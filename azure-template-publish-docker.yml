@@ -7,13 +7,10 @@ parameters:
 jobs:
 - job: 'publish_docker'
   pool:
-    ${{ if eq(parameters.os, 'macos') }}:
-      vmImage: 'macOS-10.15'
-    ${{ if eq(parameters.os, 'linux') }}:
       vmImage: 'ubuntu-20.04'
   dependsOn:
   - ${{ format('build_test_{0}_{1}', parameters.tox, parameters.os) }}
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   steps:
     - task: Docker@2
       displayName: Login to RCSB Nexus3 Registry

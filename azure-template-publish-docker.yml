@@ -7,7 +7,7 @@ parameters:
 jobs:
 - job: 'publish_docker'
   pool:
-      vmImage: 'ubuntu-20.04'
+      name: 'RCSB West'
   dependsOn:
   - ${{ format('build_test_{0}_{1}', parameters.tox, parameters.os) }}
   #condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))

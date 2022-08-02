@@ -1,0 +1,39 @@
+parameters:
+  tox: ""
+  python: ""
+  os: "linux"
+  fixtures: ""
+
+jobs:
+- job: 'publish_docker'
+  pool:
+    ${{ if eq(parameters.os, 'macos') }}:
+      vmImage: 'macOS-10.15'
+    ${{ if eq(parameters.os, 'linux') }}:
+      vmImage: 'ubuntu-20.04'
+  dependsOn:
+  - ${{ format('build_test_{0}_{1}', parameters.tox, parameters.os) }}
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  variables:
+    - group: nexus3_credentials
+  steps:
+    - task: Docker@2
+      displayName: Login to RCSB Nexus3 Registry
+      inputs:
+        command: login
+        containerRegistry: nexus3DockerRegistryServiceConnection
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        command: buildAndPush
+        containerRegistry: nexus3DockerRegistryServiceConnection
+        repository: rcsb/py-rcsb_app_chem
+        tags: |
+          latest
+          $(Build.BuildId)
+    - task: Docker@2
+      displayName: Logout of RCSB Nexus3 Registry
+      inputs:
+        command: logout
+        containerRegistry: nexus3DockerRegistryServiceConnection
+

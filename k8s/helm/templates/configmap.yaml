@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chemsearch.fullname" . }}-config
+  labels:
+    {{- include "chemsearch.labels" . | nindent 4 }}
+data:
+{{- range $path, $config := .Values.chemsearchAppProperties }}
+  {{ $path }}: |
+{{ $config | indent 4 }}
+{{- end -}}

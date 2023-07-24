@@ -5,9 +5,9 @@ WORKDIR /app/
 # copy requirements file (should include selected versions of uvicorn gunicorn)
 COPY ./requirements.txt /app/requirements.txt
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.6 \
-    libcairo2=1.16.0-4+deb10u1 \
-    && pip install --no-cache-dir --upgrade pip==23.1.2 setuptools==56.0.0 wheel==0.40.0 \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
+    libcairo2=1.16.0-7 \
+    && pip install --no-cache-dir --upgrade pip==23.2.1 setuptools==56.0.0 CMake==3.27.0 \
     && pip install --no-cache-dir --user --requirement /app/requirements.txt
 
 FROM python:3.9-slim AS runtime-image

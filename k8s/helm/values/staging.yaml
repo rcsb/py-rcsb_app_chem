@@ -6,7 +6,7 @@ vaultSecretStoreName: "rcsb-vault"
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
   pullPolicy: Always
-  tag: "k8s-staging"
+  tag: "staging"
 
 initialDelaySeconds: 30
 imagePullSecrets: "harbor-docker-registry-conf"

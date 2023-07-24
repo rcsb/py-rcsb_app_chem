@@ -53,9 +53,6 @@ spec:
             - mountPath: /etc/chemsearch/chemsearch.app.json
               subPath: chemsearch.app.json
               name: {{ include "chemsearch.fullname" . }}-config
-            - mountPath: /etc/chemsearch/chemsearch-base.app.json
-              subPath: chemsearch-base.app.json
-              name: {{ include "chemsearch.fullname" . }}-secret
           {{- with .Values.podEnvVars }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -66,9 +63,6 @@ spec:
         - name: {{ include "chemsearch.fullname" . }}-config
           configMap:
             name: {{ include "chemsearch.fullname" . }}-config
-        - name: {{ include "chemsearch.fullname" . }}-secret
-          secret:
-            secretName: {{ include "chemsearch.fullname" . }}-secret
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,0 +1,82 @@
+replicaCount: 1
+
+# vaultSecretStoreName is the name of the ClusterSecretStore resource to pull secret credentials
+vaultSecretStoreName: "rcsb-vault"
+
+image:
+  repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
+  pullPolicy: Always
+  tag: "staging"
+
+initialDelaySeconds: 30
+imagePullSecrets: "harbor-docker-registry-conf"
+
+deploymentStrategy:
+  #https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  #Type is either RollingUpdate or Recreate
+  type: "RollingUpdate"
+  #For rolling update, what percentage of total pods can be created above desired amount
+  maxSurge: 25%
+  #For rolling update, what percentage of total pods can be brought down to update
+  maxUnavailable: 25%
+
+#podEnvVars:
+#  - name: NODE_ENV
+#    value: production
+#  - name: SIERRA_CONFIG
+#    value: /etc/chemsearch/chemsearch-base.app.json,/etc/chemsearch/chemsearch.app.json
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: "haproxy"
+  annotations:
+    cert-manager.io/cluster-issuer: rutgers-acme
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chemsearch.staging.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - chemsearch.staging.k8s.rcsb.org
+        - rcsb.org
+      secretName: chemsearch.staging.k8s.rcsb.org-tls
+
+resources:
+  limits:
+    cpu: 256m
+    memory: 8Gi
+  requests:
+    cpu: 4m
+    memory: 1Gi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 80
+
+chemsearchAppProperties:
+  chemsearch.app.json: |-
+    {
+    }

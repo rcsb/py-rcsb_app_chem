@@ -6,7 +6,7 @@ WORKDIR /app/
 COPY ./requirements.txt /app/requirements.txt
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
-    libcairo2=1.16.0-7 \
+    libcairo2=1.16.0-4 \
     && pip install --no-cache-dir --upgrade pip==23.2.1 setuptools==56.0.0 CMake==3.27.0 \
     && pip install --no-cache-dir --user --requirement /app/requirements.txt
 

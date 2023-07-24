@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-workflow:
+  publish_docker:
     name: "Run automated workflow"
     uses: rcsb/devops-cicd-github-actions/.github/workflows/workflow-docker.yaml@master
     with:
@@ -14,3 +14,12 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
+  #skaffold_deploy_staging:
+  #  name: "Skaffold deploy into staging namespace"
+  #  if: (github.ref == "refs/heads/k8s-staging") && (github.event_name != 'pull_request')
+  #  needs:
+  #    - publish_docker
+  #  uses: ./.github/workflows/deploy_skaffold.yaml
+  #  with:
+  #    namespace: staging
+  #    profile: staging

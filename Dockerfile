@@ -7,7 +7,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential==12.8ubuntu1.1 \
     libcairo2==1.16.0-4ubuntu1 \
-    && pip install --no-cache-dir --upgrade pip setuptools==56.0.0 wheel=0.40.0 \
+    && pip install --no-cache-dir --upgrade pip==23.1.2 setuptools==56.0.0 wheel=0.40.0 \
     && pip install --no-cache-dir --user -r /app/requirements.txt
 
 FROM python:3.9-slim AS runtime-image

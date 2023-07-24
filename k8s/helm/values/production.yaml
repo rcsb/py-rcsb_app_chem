@@ -4,7 +4,7 @@ replicaCount: 2
 vaultSecretStoreName: "rcsb-vault"
 
 image:
-  repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-sierra"
+  repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
   pullPolicy: Always
   tag: "production"
 
@@ -20,11 +20,11 @@ deploymentStrategy:
   #For rolling update, what percentage of total pods can be brought down to update
   maxUnavailable: 25%
 
-podEnvVars:
-  - name: NODE_ENV
-    value: production
-  - name: SIERRA_CONFIG
-    value: /etc/sierra/sierra-base.app.json,/etc/sierra/sierra.app.json
+#podEnvVars:
+#  - name: NODE_ENV
+#    value: production
+#  - name: SIERRA_CONFIG
+#    value: /etc/chemsearch/chemsearch-base.app.json,/etc/chemsearch/chemsearch.app.json
 
 podSecurityContext:
   fsGroup: 1000
@@ -48,7 +48,7 @@ ingress:
     cert-manager.io/cluster-issuer: rutgers-acme
     kubernetes.io/tls-acme: "true"
   hosts:
-    - host: sierra.k8s.rcsb.org
+    - host: chemsearch.k8s.rcsb.org
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -58,9 +58,9 @@ ingress:
           pathType: ImplementationSpecific
   tls:
     - hosts:
-        - sierra.k8s.rcsb.org
+        - chemsearch.k8s.rcsb.org
         - rcsb.org
-      secretName: sierra.k8s.rcsb.org-tls
+      secretName: chemsearch.k8s.rcsb.org-tls
 
 resources:
   limits:
@@ -76,28 +76,7 @@ autoscaling:
   maxReplicas: 20
   targetCPUUtilizationPercentage: 80
 
-sierraAppProperties:
-  sierra.app.json: |-
+chemsearchAppProperties:
+  chemsearch.app.json: |-
     {
-      "server": "https://rcsb.org",
-      "mypdbCallbackServer": "https://rcsb.org",
-    
-      "newsDataUrl": "${csUrl}news/homepage/rcsb/production",
-    
-      "logLevel": "verbose",
-    
-      "consoleLog": true,
-      "consoleLogLevel": "info",
-      "consoleLogShort": false,
-      "consoleLogFilterNames": [],
-    
-      "googleAnalyticsTrackingId": "G-NQNHTXXJF8",
-    
-      "analytics": {
-        "origin_header": "Rcsb-Analytics-Traffic-Origin",
-        "stage_header" : "Rcsb-Analytics-Traffic-Stage",
-        "origin": "internal",
-        "stage": "k8s-production"
-      }
     }
-

@@ -5,7 +5,7 @@ WORKDIR /app/
 # copy requirements file (should include selected versions of uvicorn gunicorn)
 COPY ./requirements.txt /app/requirements.txt
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential==12.8ubuntu1.1 \
     libcairo2==1.16.0-4ubuntu1 \
     && pip install --no-cache-dir --upgrade pip setuptools==56.0.0 wheel=0.40.0 \
     && pip install --no-cache-dir --user -r /app/requirements.txt

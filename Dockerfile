@@ -22,6 +22,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && apt-get install -y --no-install-recommends libcairo2=1.16.0-7 \
     && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && adduser --disabled-password --gecos '' ubuntu \
     && chown -R ubuntu /app
 

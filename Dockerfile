@@ -7,7 +7,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
     libcairo2=1.16.0-7 \
-    && pip install --no-cache-dir --upgrade pip==23.2.1 setuptools==56.0.0 CMake==3.27.0 \
+    && pip install --no-cache-dir --upgrade pip==23.2.1 cmake==3.27.0 \
     && pip install --no-cache-dir --user --requirement /app/requirements.txt
 
 FROM python:3.9-slim AS runtime-image
@@ -21,7 +21,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && apt-get install -y --no-install-recommends libcairo2=1.16.0-7 \
-    $$ adduser --disabled-password --gecos '' ubuntu \
+    && apt-get clean \
+    && adduser --disabled-password --gecos '' ubuntu \
     && chown -R ubuntu /app
 
 COPY --from=build-image --chown=ubuntu:ubuntu /root/.local /home/ubuntu/.local

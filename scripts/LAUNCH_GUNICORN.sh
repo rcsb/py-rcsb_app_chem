@@ -17,14 +17,14 @@ THISIP=${HOSTIP:="0.0.0.0"}
 THISPORT=${HOSTPORT:="8000"}
 ADDR=${THISIP}:${THISPORT}
 
-unset CHEM_SEARCH_DATA_HOSTNAME
-unset CHEM_SEARCH_DATA_PATH
+#unset CHEM_SEARCH_DATA_HOSTNAME
+#unset CHEM_SEARCH_DATA_PATH
 export CHEM_SEARCH_CC_PREFIX="cc-full"
 export CHEM_SEARCH_CACHE_PATH=${HERE}/CACHE
 export CHEM_DEPICT_CACHE_PATH=${HERE}/CACHE
 export GIT_PYTHON_REFRESH=quiet
 
-gunicorn \
+/home/ubuntu/.local/bin/gunicorn \
 rcsb.app.chem.main:app \
     --timeout 300 \
     --chdir ${HERE} \

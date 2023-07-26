@@ -1,12 +1,13 @@
----
+{{- if .Values.useAppConfigs }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "chemsearch.fullname" . }}-config
+  name: {{ include "chemsearch.configmapName" . }}
   labels:
     {{- include "chemsearch.labels" . | nindent 4 }}
 data:
-{{- range $path, $config := .Values.chemsearchAppProperties }}
-  {{ $path }}: |
-{{ $config | indent 4 }}
+{{- range $file, $_ := .Values.appConfigs }}
+  {{ $file }}: |
+{{ $_.value | indent 4 }}
 {{- end -}}
+{{- end }}

@@ -49,20 +49,38 @@ spec:
             httpGet:
               path: /alive
               port: http
-          volumeMounts:
-            - mountPath: /etc/chemsearch/chemsearch.app.json
-              subPath: chemsearch.app.json
-              name: {{ include "chemsearch.fullname" . }}-config
           {{- with .Values.podEnvVars }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if or .Values.useSecretsVolume .Values.useAppConfigs }}
+          volumeMounts:
+            {{- range .Values.secretVolumes }}
+            - name: {{ .name | quote }}
+              mountPath: "{{ .mountPath }}"
+              subPath: {{ .filename | quote }}
+            {{- end }}
+            {{- if or .Values.useAppConfigs}}
+            - name: {{ include "chemsearch.configmapName" $ }}
+              mountPath: "{{ .mountPath }}/{{ .filename }}"
+              subPath: {{ .filename | quote }}
+             {{- end }}
+          {{- end }}
+      {{- if or .Values.useSecretsVolume .Values.useAppConfigs}}
       volumes:
-        - name: {{ include "chemsearch.fullname" . }}-config
+        {{- if .Values.useAppConfigs }}
+        - name: {{ include "chemsearch.configmapName" . }}
           configMap:
-            name: {{ include "chemsearch.fullname" . }}-config
+            name: {{ include "chemsearch.configmapName" . }}
+        {{- end }}
+        {{- range .Values.secretVolumes }}
+          - name: {{ .name | quote }}
+            secret:
+              secretName: {{ .secretName | quote }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

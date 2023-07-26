@@ -20,7 +20,8 @@ ENV PATH=/home/ubuntu/.local/bin:$PATH
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN adduser --disabled-password --gecos '' ubuntu \
+RUN apt-get update && apt-get install -y --no-install-recommends libcairo2=1.16.0-7 \
+    $$ adduser --disabled-password --gecos '' ubuntu \
     && chown -R ubuntu /app
 
 COPY --from=build-image --chown=ubuntu:ubuntu /root/.local /home/ubuntu/.local

@@ -98,7 +98,7 @@ externalSecret:
 useSecretsVolume: true
 secretVolumes:
   - name: oe-license
-    mountPath: /home/ubuntu/
+    mountPath: /app/oe-license/
     filename: oe-license.txt
     secretName: oe-license
 #  - name: Name of the volume reference in the Deployment resource
@@ -125,4 +125,4 @@ podEnvVars:
   - name: CHEM_SEARCH_UPDATE_CHANNEL
     value: a
   - name: OE_LICENSE
-    value: /home/ubuntu/oe-license.txt
+    value: /app/oe-license/oe-license.txt

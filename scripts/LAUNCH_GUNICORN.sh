@@ -13,21 +13,21 @@ echo "HERE=${HERE}"
 echo "TOPDIR=${TOPDIR}"
 echo "OE_LICENSE=$OE_LICENSE"
 
-THISIP=${HOSTIP:="127.0.0.1"}
+THISIP=${HOSTIP:="0.0.0.0"}
 THISPORT=${HOSTPORT:="8000"}
 ADDR=${THISIP}:${THISPORT}
 
 unset CHEM_SEARCH_DATA_HOSTNAME
 unset CHEM_SEARCH_DATA_PATH
 export CHEM_SEARCH_CC_PREFIX="cc-full"
-export CHEM_SEARCH_CACHE_PATH=${TOPDIR}/CACHE
-export CHEM_DEPICT_CACHE_PATH=${TOPDIR}/CACHE
+export CHEM_SEARCH_CACHE_PATH=${HERE}/CACHE
+export CHEM_DEPICT_CACHE_PATH=${HERE}/CACHE
 export GIT_PYTHON_REFRESH=quiet
 
 gunicorn \
 rcsb.app.chem.main:app \
     --timeout 300 \
-    --chdir ${TOPDIR} \
+    --chdir ${HERE} \
     --bind ${ADDR} \
     --reload \
     --worker-class uvicorn.workers.UvicornWorker \
@@ -35,4 +35,3 @@ rcsb.app.chem.main:app \
     --error-logfile - \
     --capture-output \
     --enable-stdio-inheritance
-#

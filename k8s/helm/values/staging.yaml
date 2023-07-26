@@ -6,7 +6,7 @@ vaultSecretStoreName: "rcsb-vault"
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
   pullPolicy: Always
-  tag: "staging"
+  tag: "k8s-staging"
 
 initialDelaySeconds: 30
 imagePullSecrets: "harbor-docker-registry-conf"
@@ -76,7 +76,53 @@ autoscaling:
   maxReplicas: 20
   targetCPUUtilizationPercentage: 80
 
-chemsearchAppProperties:
-  chemsearch.app.json: |-
-    {
-    }
+# externalSecret defines values for the ExternalSecret resource if your application needs to pull values
+# from an external Vault service.
+# TODO: Review externalSecret values as required.
+externalSecret:
+  enabled: true
+  secretStoreRefName: "rcsb-vault"
+  targets:
+    - secretName: oe-license
+      data:
+        - secretKey: oe-license
+          remoteRef:
+            key: openeye/license
+            property: license
+      #  - secretKey: key_name_to_create_in_Secret_k8s_resource
+      #    remoteRef:
+      #      key: vault_engine_name/secret_name
+      #      property: name_of_key_of_secret_in_vault
+
+# useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
+useSecretsVolume: true
+secretVolumes:
+  - name: oe-license
+    mountPath: /home/ubuntu/
+    filename: oe-license.txt
+    secretName: oe-license
+#  - name: Name of the volume reference in the Deployment resource
+#    mountPath: Full path in the container to mount the secret file
+#    filename: The filename of the secret file to mount
+#    secretName: Name of the Secret resource in K8s
+
+# appConfigs defines ConfigMap resources which are mounted into the container environment as a file.
+useAppConfigs: false
+appConfigs: {}
+  #  example.log4j.xml:
+  #    mountPath: Full path in the container to mount this config file
+  #    filename: The filename of the config file to mount
+  #    value: |-
+  #      <example>
+  #        Can be any other file types besides xml as well!
+#      </example>
+
+podEnvVars:
+  - name: CHEM_SEARCH_DATA_HOSTNAME
+    value: bl-west.rcsb.org
+  - name: CHEM_SEARCH_DATA_PATH
+    value: 4-coastal
+  - name: CHEM_SEARCH_UPDATE_CHANNEL
+    value: a
+  - name: OE_LICENSE
+    value: /home/ubuntu/oe-license.txt

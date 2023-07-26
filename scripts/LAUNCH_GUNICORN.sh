@@ -24,6 +24,8 @@ export CHEM_SEARCH_CACHE_PATH=${HERE}/CACHE
 export CHEM_DEPICT_CACHE_PATH=${HERE}/CACHE
 export GIT_PYTHON_REFRESH=quiet
 
+ls -la /home/ubuntu/.local/bin/*
+
 /home/ubuntu/.local/bin/gunicorn \
 rcsb.app.chem.main:app \
     --timeout 300 \

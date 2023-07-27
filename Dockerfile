@@ -23,7 +23,6 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y --no-install-recommends libcairo2=1.16.0-7 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    $$ mkdir /app/oe-license \
     && adduser --disabled-password --gecos '' ubuntu \
     && chown -R ubuntu /app
 
@@ -33,6 +32,10 @@ COPY --chown=ubuntu:ubuntu ./scripts/LAUNCH_GUNICORN.sh /app/launch.sh
 COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 
 USER ubuntu
+
+# Workaround to mount maven settings.xml secrets into runner container
+RUN mkdir ~/oe-license && \
+    ln -s ~/.secrets/oe-license.txt ~/oe-license/oe-license.txt
 
 # Launch the service
 CMD ["/app/launch.sh"]

@@ -5,10 +5,10 @@ vaultSecretStoreName: "rcsb-vault"
 
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tag: "production"
 
-initialDelaySeconds: 30
+initialDelaySeconds: 300
 imagePullSecrets: "harbor-docker-registry-conf"
 
 deploymentStrategy:

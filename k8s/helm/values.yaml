@@ -5,10 +5,10 @@ vaultSecretStoreName: "rcsb-vault"
 
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
-  pullPolicy: Always
-  tag: "staging"
+  pullPolicy: IfNotPresent
+  tag: "k8s-staging"
 
-initialDelaySeconds: 30
+initialDelaySeconds: 300
 imagePullSecrets: "harbor-docker-registry-conf"
 
 deploymentStrategy:
@@ -39,7 +39,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 8000
+  port: 8080
 
 ingress:
   enabled: true
@@ -83,9 +83,9 @@ externalSecret:
   enabled: true
   secretStoreRefName: "rcsb-vault"
   targets:
-    - secretName: oe-license
+    - secretName: oe-license-file
       data:
-        - secretKey: oe-license
+        - secretKey: oe-license.txt
           remoteRef:
             key: openeye/license
             property: license
@@ -98,9 +98,9 @@ externalSecret:
 useSecretsVolume: true
 secretVolumes:
   - name: oe-license
-    mountPath: /home/ubuntu/
+    mountPath: /home/ubuntu/.secrets
     filename: oe-license.txt
-    secretName: oe-license
+    secretName: oe-license-file
 #  - name: Name of the volume reference in the Deployment resource
 #    mountPath: Full path in the container to mount the secret file
 #    filename: The filename of the secret file to mount
@@ -125,4 +125,4 @@ podEnvVars:
   - name: CHEM_SEARCH_UPDATE_CHANNEL
     value: a
   - name: OE_LICENSE
-    value: /home/ubuntu/oe-license.txt
+    value: /home/ubuntu/oe-license/oe-license.txt

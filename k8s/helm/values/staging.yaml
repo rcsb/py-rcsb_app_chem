@@ -6,7 +6,7 @@ vaultSecretStoreName: "rcsb-vault"
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
   pullPolicy: IfNotPresent
-  tag: "k8s-staging"
+  tag: "staging"
 
 initialDelaySeconds: 300
 imagePullSecrets: "harbor-docker-registry-conf"
@@ -52,14 +52,9 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-    - host: rcsb.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
   tls:
     - hosts:
         - chemsearch.staging.k8s.rcsb.org
-        - rcsb.org
       secretName: chemsearch.staging.k8s.rcsb.org-tls
 
 resources:

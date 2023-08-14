@@ -52,14 +52,9 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-    - host: rcsb.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
   tls:
     - hosts:
         - chemsearch.k8s.rcsb.org
-        - rcsb.org
       secretName: chemsearch.k8s.rcsb.org-tls
 
 resources:
@@ -83,9 +78,9 @@ externalSecret:
   enabled: true
   secretStoreRefName: "rcsb-vault"
   targets:
-    - secretName: oe-license
+    - secretName: oe-license-file
       data:
-        - secretKey: oe-license
+        - secretKey: oe-license.txt
           remoteRef:
             key: openeye/license
             property: license
@@ -98,9 +93,9 @@ externalSecret:
 useSecretsVolume: true
 secretVolumes:
   - name: oe-license
-    mountPath: /home/ubuntu/
+    mountPath: /home/ubuntu/.secrets
     filename: oe-license.txt
-    secretName: oe-license
+    secretName: oe-license-file
 #  - name: Name of the volume reference in the Deployment resource
 #    mountPath: Full path in the container to mount the secret file
 #    filename: The filename of the secret file to mount
@@ -125,4 +120,4 @@ podEnvVars:
   - name: CHEM_SEARCH_UPDATE_CHANNEL
     value: a
   - name: OE_LICENSE
-    value: /home/ubuntu/oe-license.txt
+    value: /home/ubuntu/oe-license/oe-license.txt

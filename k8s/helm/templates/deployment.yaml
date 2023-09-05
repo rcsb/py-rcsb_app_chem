@@ -20,8 +20,6 @@ spec:
     {{- end }}
   template:
     metadata:
-      annotations:
-        timestamp: {{ now | quote }}
       labels:
         {{- include "chemsearch.selectorLabels" . | nindent 8 }}
     spec:

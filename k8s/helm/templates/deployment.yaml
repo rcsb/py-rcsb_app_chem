@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   name: {{ include "chemsearch.fullname" $ }}-{{ . }}
   labels:
-    {{- include "chemsearch.labels" . | nindent 4 }}
+    {{- include "chemsearch.labels" $ | nindent 4 }}
     rcsb.org/path: {{ . | quote }}
 spec:
   {{- if not $.Values.autoscaling.enabled }}

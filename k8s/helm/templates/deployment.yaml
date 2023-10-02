@@ -1,93 +1,79 @@
+{{- range tuple "a" "b" }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chemsearch.fullname" . }}
+  name: {{ include "chemsearch.fullname" $ }}-{{ . }}
   labels:
     {{- include "chemsearch.labels" . | nindent 4 }}
+    rcsb.org/path: {{ . | quote }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not $.Values.autoscaling.enabled }}
+  replicas: {{ $.Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "chemsearch.selectorLabels" . | nindent 6 }}
+      {{- include "chemsearch.selectorLabels" $ | nindent 6 }}
+      rcsb.org/path: {{ . | quote }}
   strategy:
-    type: {{ .Values.deploymentStrategy.type }}
-    {{- if eq .Values.deploymentStrategy.type "RollingUpdate" }}
+    type: {{ $.Values.deploymentStrategy.type }}
+    {{- if eq $.Values.deploymentStrategy.type "RollingUpdate" }}
     rollingUpdate:
-      maxSurge: {{ .Values.deploymentStrategy.maxSurge }}
-      maxUnavailable: {{ .Values.deploymentStrategy.maxUnavailable }}
+      maxSurge: {{ $.Values.deploymentStrategy.maxSurge }}
+      maxUnavailable: {{ $.Values.deploymentStrategy.maxUnavailable }}
     {{- end }}
   template:
     metadata:
       labels:
-        {{- include "chemsearch.selectorLabels" . | nindent 8 }}
+        {{- include "chemsearch.selectorLabels" $ | nindent 8 }}
+        rcsb.org/path: {{ . | quote }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets }}
+        - name: {{ $.Values.imagePullSecrets }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $.Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.initialDelaySeconds }}
             httpGet:
               path: /alive
               port: http
           readinessProbe:
-            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.initialDelaySeconds }}
             httpGet:
               path: /alive
               port: http
-          {{- with .Values.podEnvVars }}
           env:
+            {{- with $.Values.podEnvVars }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
+            - name: CHEM_SEARCH_UPDATE_CHANNEL
+              value: {{ . }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.useSecretsVolume .Values.useAppConfigs }}
+            {{- toYaml $.Values.resources | nindent 12 }}
+          {{- if $.Values.useSecretsVolume }}
           volumeMounts:
-            {{- range .Values.secretVolumes }}
+            {{- range $.Values.secretVolumes }}
             - name: {{ .name | quote }}
               mountPath: "{{ .mountPath }}"
               readOnly: true
             {{- end }}
-            {{- if or .Values.useAppConfigs}}
-            - name: {{ include "chemsearch.configmapName" $ }}
-              mountPath: "{{ .mountPath }}/{{ .filename }}"
-              subPath: {{ .filename | quote }}
-             {{- end }}
           {{- end }}
-      {{- if or .Values.useSecretsVolume .Values.useAppConfigs}}
+      {{- if $.Values.useSecretsVolume }}
       volumes:
-        {{- if .Values.useAppConfigs }}
-        - name: {{ include "chemsearch.configmapName" . }}
-          configMap:
-            name: {{ include "chemsearch.configmapName" . }}
-        {{- end }}
-        {{- range .Values.secretVolumes }}
+        {{- range $.Values.secretVolumes }}
           - name: {{ .name | quote }}
             secret:
               secretName: {{ .secretName | quote }}
         {{- end }}
       {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- end }}

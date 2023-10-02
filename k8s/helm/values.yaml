@@ -20,12 +20,6 @@ deploymentStrategy:
   #For rolling update, what percentage of total pods can be brought down to update
   maxUnavailable: 25%
 
-#podEnvVars:
-#  - name: NODE_ENV
-#    value: production
-#  - name: SIERRA_CONFIG
-#    value: /etc/chemsearch/chemsearch-base.app.json,/etc/chemsearch/chemsearch.app.json
-
 podSecurityContext:
   fsGroup: 1000
 
@@ -106,23 +100,11 @@ secretVolumes:
 #    filename: The filename of the secret file to mount
 #    secretName: Name of the Secret resource in K8s
 
-# appConfigs defines ConfigMap resources which are mounted into the container environment as a file.
-useAppConfigs: false
-appConfigs: {}
-  #  example.log4j.xml:
-  #    mountPath: Full path in the container to mount this config file
-  #    filename: The filename of the config file to mount
-  #    value: |-
-  #      <example>
-  #        Can be any other file types besides xml as well!
-  #      </example>
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME
     value: bl-west.rcsb.org
   - name: CHEM_SEARCH_DATA_PATH
     value: 4-coastal
-  - name: CHEM_SEARCH_UPDATE_CHANNEL
-    value: a
   - name: OE_LICENSE
     value: /home/ubuntu/oe-license/oe-license.txt

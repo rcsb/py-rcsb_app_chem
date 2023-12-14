@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS build-image
+FROM harbor.devops.k8s.rcsb.org/dockerhub/python:3.9-slim AS build-image
 
 WORKDIR /app/
 
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends build-essential
     && pip install --no-cache-dir --upgrade pip==23.2.1 cmake==3.27.0 \
     && pip install --no-cache-dir --user --requirement /app/requirements.txt
 
-FROM python:3.9-slim AS runtime-image
+FROM harbor.devops.k8s.rcsb.org/dockerhub/python:3.9-slim AS runtime-image
 LABEL maintainer="RCSB IT <it@rcsb.org>"
 
 WORKDIR /app/
@@ -33,7 +33,7 @@ COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 
 USER ubuntu
 
-# Workaround to mount maven settings.xml secrets into runner container
+# Workaround to mount OpenEye license secret into runner container
 RUN mkdir ~/oe-license && \
     ln -s ~/.secrets/oe-license.txt ~/oe-license/oe-license.txt
 

@@ -46,10 +46,20 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+    - host: chemsearch.east.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch.west.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls:
     - hosts:
         - chemsearch.k8s.rcsb.org
-      secretName: chemsearch.k8s.rcsb.org-tls
+        - chemsearch.east.k8s.rcsb.org
+        - chemsearch.west.k8s.rcsb.org
+      secretName: chemsearch.staging.k8s.rcsb.org-tls
 
 resources:
   limits:

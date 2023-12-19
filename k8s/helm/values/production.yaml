@@ -59,7 +59,7 @@ ingress:
         - chemsearch.k8s.rcsb.org
         - chemsearch.east.k8s.rcsb.org
         - chemsearch.west.k8s.rcsb.org
-      secretName: chemsearch.staging.k8s.rcsb.org-tls
+      secretName: chemsearch.k8s.rcsb.org-tls
 
 resources:
   limits:

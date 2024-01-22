@@ -41,25 +41,9 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: rutgers-acme
     kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chemsearch.staging.k8s.rcsb.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-    - host: chemsearch.staging.east.k8s.rcsb.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-    - host: chemsearch.staging.west.k8s.rcsb.org
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-    - hosts:
-        - chemsearch.staging.k8s.rcsb.org
-        - chemsearch.staging.east.k8s.rcsb.org
-        - chemsearch.staging.west.k8s.rcsb.org
-      secretName: chemsearch.staging.k8s.rcsb.org-tls
+  host: chemsearch.staging.k8s.rcsb.org
+  path: /
+  pathType: ImplementationSpecific
 
 resources:
   limits:
@@ -77,7 +61,6 @@ autoscaling:
 
 # externalSecret defines values for the ExternalSecret resource if your application needs to pull values
 # from an external Vault service.
-# TODO: Review externalSecret values as required.
 externalSecret:
   enabled: true
   secretStoreRefName: "rcsb-vault"
@@ -88,10 +71,6 @@ externalSecret:
           remoteRef:
             key: openeye/license
             property: license
-      #  - secretKey: key_name_to_create_in_Secret_k8s_resource
-      #    remoteRef:
-      #      key: vault_engine_name/secret_name
-      #      property: name_of_key_of_secret_in_vault
 
 # useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
 useSecretsVolume: true
@@ -100,10 +79,6 @@ secretVolumes:
     mountPath: /home/ubuntu/.secrets
     filename: oe-license.txt
     secretName: oe-license-file
-#  - name: Name of the volume reference in the Deployment resource
-#    mountPath: Full path in the container to mount the secret file
-#    filename: The filename of the secret file to mount
-#    secretName: Name of the Secret resource in K8s
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME

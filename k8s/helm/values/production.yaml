@@ -49,9 +49,11 @@ resources:
   limits:
     cpu: 256m
     memory: 8Gi
+    ephemeral-storage: "9G"
   requests:
     cpu: 4m
     memory: 1Gi
+    ephemeral-storage: "9G"
 
 autoscaling:
   enabled: false

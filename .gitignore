@@ -8,7 +8,7 @@ LOGTOX
 Archive/
 test-data/components.cif
 test-data/components.cif.gz
-
+# test
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

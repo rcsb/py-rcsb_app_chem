@@ -2,7 +2,7 @@
 OpenEye-toolkits == 2020.2.2
 fastapi == 0.68.0
 # pydantic == 1.7.4
-gunicorn == 20.0.4
+gunicorn == 22.0.0
 rcsb.utils.io >= 1.17
 rcsb.utils.chem >= 0.73
 

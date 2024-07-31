@@ -3,36 +3,35 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "chemsearch.fullname" $ }}-{{ . }}
+  name: {{ include "helm_chart.fullname" $ }}-{{ . }}
   labels:
-    {{- include "chemsearch.labels" $ | nindent 4 }}
+    {{- include "helm_chart.labels" $ | nindent 4 }}
     rcsb.org/path: {{ . | quote }}
 spec:
   type: {{ $.Values.service.type }}
   ports:
     - port: {{ $.Values.service.port }}
-      targetPort: http
+      targetPort: {{ $.Values.service.containerPort }}
       protocol: TCP
       name: http
   selector:
-    {{- include "chemsearch.selectorLabels" $ | nindent 4 }}
+    {{- include "helm_chart.selectorLabels" $ | nindent 4 }}
     rcsb.org/path: {{ . | quote }}
 {{- end }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "chemsearch.fullname" . }}
+  name: {{ include "helm_chart.fullname" . }}
   annotations:
     rcsb.org/path-operator-managed: "true"
   labels:
-    {{- include "chemsearch.labels" . | nindent 4 }}
+    {{- include "helm_chart.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.service.containerPort }}
       protocol: TCP
-      name: http
   selector:
-    {{- include "chemsearch.selectorLabels" . | nindent 4 }}
+    {{- include "helm_chart.selectorLabels" . | nindent 4 }}

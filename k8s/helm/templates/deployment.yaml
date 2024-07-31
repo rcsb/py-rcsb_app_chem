@@ -52,14 +52,12 @@ spec:
           livenessProbe:
             initialDelaySeconds: {{ $.Values.initialLivenessDelaySeconds }}
             failureThreshold: {{ $.Values.livenessProbe.failureThreshold }}
-            periodSeconds: {{ $.Values.livenessProbe.periodSeconds }}
             httpGet:
               path: {{ $.Values.livenessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}
           readinessProbe:
             initialDelaySeconds: {{ $.Values.initialReadinessDelaySeconds }}
             failureThreshold: {{ $.Values.readinessProbe.failureThreshold }}
-            periodSeconds: {{ $.Values.readinessProbe.periodSeconds }}
             httpGet:
               path: {{ $.Values.readinessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}

@@ -51,13 +51,11 @@ spec:
               protocol: TCP
           livenessProbe:
             initialDelaySeconds: {{ $.Values.initialLivenessDelaySeconds }}
-            failureThreshold: {{ $.Values.livenessProbe.failureThreshold }}
             httpGet:
               path: {{ $.Values.livenessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}
           readinessProbe:
             initialDelaySeconds: {{ $.Values.initialReadinessDelaySeconds }}
-            failureThreshold: {{ $.Values.readinessProbe.failureThreshold }}
             httpGet:
               path: {{ $.Values.readinessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}

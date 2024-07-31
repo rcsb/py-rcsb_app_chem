@@ -12,15 +12,13 @@ vaultSecretStoreName: "rcsb-vault"
 # A Pod is considered "live" when it is able to respond to client requests.
 # A Pod is considered "ready" when it has completed initialization and should be one of the backends for a K8s Service resource.
 livenessProbe:
-  enable: false
-  initialDelaySeconds: 30
+  initialDelaySeconds: 120
   periodSeconds: 30
   failureThreshold: 6
   http:
     path: /alive
 readinessProbe:
-  enable: false
-  initialDelaySeconds: 30
+  initialDelaySeconds: 120
   periodSeconds: 30
   failureThreshold: 6
   http:

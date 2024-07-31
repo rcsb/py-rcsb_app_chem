@@ -50,12 +50,16 @@ spec:
             - containerPort: {{ $.Values.service.containerPort }}
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: {{ $.Values.initialLivenessDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.livenessProbe.initialDelaySeconds }}
+            failureThreshold: {{ $.Values.livenessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.livenessProbe.periodSeconds }}
             httpGet:
               path: {{ $.Values.livenessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}
           readinessProbe:
-            initialDelaySeconds: {{ $.Values.initialReadinessDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.readinessProbe.initialDelaySeconds }}
+            failureThreshold: {{ $.Values.readinessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.readinessProbe.periodSeconds }}
             httpGet:
               path: {{ $.Values.readinessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}

@@ -2,6 +2,8 @@ name: Run CI/CD Workflow
 
 on:
   push:
+    paths-ignore:
+      - "k8s/**"
   workflow_dispatch:
 
 jobs:
@@ -14,4 +16,3 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
-      mainline_branch: "k8s-staging"

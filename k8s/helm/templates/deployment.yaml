@@ -3,17 +3,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chemsearch.fullname" $ }}-{{ . }}
+  name: {{ include "helm_chart.fullname" $ }}-{{ . }}
   labels:
-    {{- include "chemsearch.labels" $ | nindent 4 }}
+    {{- include "helm_chart.labels" $ | nindent 4 }}
     rcsb.org/path: {{ . | quote }}
 spec:
-  {{- if not $.Values.autoscaling.enabled }}
   replicas: {{ $.Values.replicaCount }}
-  {{- end }}
+  revisionHistoryLimit: {{ $.Values.revisionHistoryLimit}}
   selector:
     matchLabels:
-      {{- include "chemsearch.selectorLabels" $ | nindent 6 }}
+      {{- include "helm_chart.selectorLabels" $ | nindent 6 }}
       rcsb.org/path: {{ . | quote }}
   strategy:
     type: {{ $.Values.deploymentStrategy.type }}
@@ -25,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "chemsearch.selectorLabels" $ | nindent 8 }}
+        {{- include "helm_chart.selectorLabels" $ | nindent 8 }}
         rcsb.org/path: {{ . | quote }}
     spec:
       affinity:
@@ -34,7 +33,7 @@ spec:
             - podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    {{- include "chemsearch.selectorLabels" $ | nindent 20 }}
+                    {{- include "helm_chart.selectorLabels" $ | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
               weight: 1
       imagePullSecrets:
@@ -43,24 +42,27 @@ spec:
         {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ $.Chart.Name }}
-          securityContext:
-            {{- toYaml $.Values.securityContext | nindent 12 }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml $.Values.containerSecurityContext | nindent 12 }}
           ports:
-            - name: http
-              containerPort: 8000
+            - containerPort: {{ $.Values.service.containerPort }}
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: {{ $.Values.initialDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.initialLivenessDelaySeconds }}
+            failureThreshold: {{ $.Values.livenessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.livenessProbe.periodSeconds }}
             httpGet:
-              path: /alive
-              port: http
+              path: {{ $.Values.livenessProbe.http.path }}
+              port: {{ $.Values.service.containerPort }}
           readinessProbe:
-            initialDelaySeconds: {{ $.Values.initialDelaySeconds }}
+            initialDelaySeconds: {{ $.Values.initialReadinessDelaySeconds }}
+            failureThreshold: {{ $.Values.readinessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.readinessProbe.periodSeconds }}
             httpGet:
-              path: /alive
-              port: http
+              path: {{ $.Values.readinessProbe.http.path }}
+              port: {{ $.Values.service.containerPort }}
           env:
             {{- with $.Values.podEnvVars }}
             {{- toYaml . | nindent 12 }}
@@ -77,7 +79,7 @@ spec:
               readOnly: true
             {{- end }}
           {{- end }}
-      {{- if $.Values.useSecretsVolume }}
+          {{- if $.Values.useSecretsVolume }}
       volumes:
         {{- range $.Values.secretVolumes }}
           - name: {{ .name | quote }}

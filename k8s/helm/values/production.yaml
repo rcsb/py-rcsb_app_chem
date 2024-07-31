@@ -1,14 +1,37 @@
-replicaCount: 2
+# Default values for prerelease.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
+replicaCount: 2
+revisionHistoryLimit: 3
+    
 # vaultSecretStoreName is the name of the ClusterSecretStore resource to pull secret credentials
 vaultSecretStoreName: "rcsb-vault"
 
+# Define container liveness and readiness checks
+# A Pod is considered "live" when it is able to respond to client requests.
+# A Pod is considered "ready" when it has completed initialization and should be one of the backends for a K8s Service resource.
+livenessProbe:
+  enable: false
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 6
+  http:
+    path: /
+readinessProbe:
+  enable: false
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 6
+  http:
+    path: /api/alive
+
+
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "production"
 
-initialDelaySeconds: 300
 imagePullSecrets: "harbor-docker-registry-conf"
 
 deploymentStrategy:
@@ -22,28 +45,20 @@ deploymentStrategy:
 
 podSecurityContext:
   fsGroup: 1000
-
-securityContext:
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: false
   runAsNonRoot: true
   runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
 
 service:
   type: ClusterIP
   port: 80
-
-ingress:
-  enabled: true
-  className: "haproxy"
-  annotations:
-    cert-manager.io/cluster-issuer: rutgers-acme
-    kubernetes.io/tls-acme: "true"
-  host: chemsearch.west.k8s.rcsb.org
-  path: /
-  pathType: ImplementationSpecific
+  containerPort: 8000
 
 resources:
   limits:

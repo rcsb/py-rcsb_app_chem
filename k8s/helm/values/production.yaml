@@ -52,7 +52,7 @@ podSecurityContext:
     type: RuntimeDefault
 
 containerSecurityContext:
-  readOnlyRootFilesystem: true
+  # readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
 
 service:

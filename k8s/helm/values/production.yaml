@@ -16,13 +16,13 @@ livenessProbe:
   periodSeconds: 30
   failureThreshold: 6
   http:
-    path: /alive
+    path: /api/alive
 readinessProbe:
   initialDelaySeconds: 120
   periodSeconds: 30
   failureThreshold: 6
   http:
-    path: /alive
+    path: /api/alive
 
 
 image:

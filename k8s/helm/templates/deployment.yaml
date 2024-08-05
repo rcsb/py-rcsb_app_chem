@@ -72,8 +72,6 @@ spec:
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
-            - name: tmpfs   # Required for app to write to /tmp but enforce readonly root file system.
-              mountPath: /tmp
             {{- if $.Values.useSecretsVolume }}
             {{- range $.Values.secretVolumes }}
             - name: {{ .name | quote }}
@@ -82,9 +80,6 @@ spec:
             {{- end }}
             {{- end }}
       volumes:
-        - name: tmpfs
-          emptyDir:
-            medium: Memory
         {{- if $.Values.useSecretsVolume }}
         {{- range $.Values.secretVolumes }}
           - name: {{ .name | quote }}

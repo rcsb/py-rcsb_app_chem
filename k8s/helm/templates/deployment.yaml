@@ -71,24 +71,25 @@ spec:
               value: {{ . }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
-          {{- if $.Values.useSecretsVolume }}
           volumeMounts:
             - name: tmpfs   # Required for app to write to /tmp but enforce readonly root file system.
               mountPath: /tmp
+            {{- if $.Values.useSecretsVolume }}
             {{- range $.Values.secretVolumes }}
             - name: {{ .name | quote }}
               mountPath: "{{ .mountPath }}"
               readOnly: true
             {{- end }}
-          {{- end }}
-          {{- if $.Values.useSecretsVolume }}
+            {{- end }}
       volumes:
         - name: tmpfs
           emptyDir:
             medium: Memory
+        {{- if $.Values.useSecretsVolume }}
         {{- range $.Values.secretVolumes }}
           - name: {{ .name | quote }}
             secret:
               secretName: {{ .secretName | quote }}
+        {{- end }}
         {{- end }}
 {{- end }}

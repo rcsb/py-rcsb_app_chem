@@ -82,11 +82,14 @@ spec:
             {{- end }}
             {{- end }}
       volumes:
+        - name: tmpfs
+          emptyDir:
+            medium: Memory
         {{- if $.Values.useSecretsVolume }}
         {{- range $.Values.secretVolumes }}
-          - name: {{ .name | quote }}
-            secret:
-              secretName: {{ .secretName | quote }}
+        - name: {{ .name | quote }}
+          secret:
+            secretName: {{ .secretName | quote }}
         {{- end }}
         {{- end }}
 {{- end }}

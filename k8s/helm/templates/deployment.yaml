@@ -91,5 +91,4 @@ spec:
             secret:
               secretName: {{ .secretName | quote }}
         {{- end }}
-      {{- end }}
 {{- end }}

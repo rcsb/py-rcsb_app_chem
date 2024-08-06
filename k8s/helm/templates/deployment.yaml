@@ -73,21 +73,17 @@ spec:
             - name: tmpfs   # Required for app to write to /tmp but enforce readonly root file system.
               mountPath: /tmp
             {{- if $.Values.useSecretsVolume }}
-            {{- range $.Values.secretVolumes }}
-            - name: {{ .name | quote }}
-              mountPath: "{{ .mountPath }}"
+            - name: {{ $.Values.secretVolumes.name }}
+              mountPath: "{{ $.Values.secretVolumes.mountPath }}"
               readOnly: true
-            {{- end }}
             {{- end }}
       volumes:
         - name: tmpfs
           emptyDir:
             medium: Memory
         {{- if $.Values.useSecretsVolume }}
-        {{- range $.Values.secretVolumes }}
-        - name: {{ .name | quote }}
+        - name: {{ $.Values.secretVolumes.name | quote }}
           secret:
-            secretName: {{ .secretName | quote }}
-        {{- end }}
+            secretName: {{ $.Values.secretVolumes.secretName | quote }}
         {{- end }}
 {{- end }}

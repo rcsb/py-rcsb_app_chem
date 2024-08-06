@@ -90,10 +90,10 @@ externalSecret:
 # useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
 useSecretsVolume: true
 secretVolumes:
-  - name: oe-license
-    mountPath: /home/ubuntu/.secrets
-    filename: oe-license.txt
-    secretName: oe-license-file
+  name: oe-license
+  mountPath: /home/ubuntu/.secrets
+  filename: oe-license.txt
+  secretName: oe-license-file
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME

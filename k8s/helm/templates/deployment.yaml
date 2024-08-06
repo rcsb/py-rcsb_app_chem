@@ -70,6 +70,8 @@ spec:
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
+            - name: appfs   # Required for app to write to /app but enforce readonly root file system.
+              mountPath: /app
             - name: tmpfs   # Required for app to write to /tmp but enforce readonly root file system.
               mountPath: /tmp
             {{- if $.Values.useSecretsVolume }}
@@ -79,6 +81,9 @@ spec:
             {{- end }}
       volumes:
         - name: tmpfs
+          emptyDir:
+            medium: Memory
+        - name: appfs
           emptyDir:
             medium: Memory
         {{- if $.Values.useSecretsVolume }}

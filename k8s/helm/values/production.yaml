@@ -76,16 +76,15 @@ autoscaling:
 
 # externalSecret defines values for the ExternalSecret resource if your application needs to pull values
 # from an external Vault service.
+
 externalSecret:
   enabled: true
   secretStoreRefName: "rcsb-vault"
-  targets:
-    - secretName: oe-license-file
-      data:
-        - secretKey: oe-license.txt
-          remoteRef:
-            key: openeye/license
-            property: license
+  data:
+    - secretKey: oe-license.txt
+      remoteRef:
+        key: openeye/license
+        property: license
 
 # useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
 useSecretsVolume: true

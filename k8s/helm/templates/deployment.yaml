@@ -64,9 +64,7 @@ spec:
               path: {{ $.Values.readinessProbe.http.path }}
               port: {{ $.Values.service.containerPort }}
           env:
-            {{- with $.Values.podEnvVars }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
             - name: CHEM_SEARCH_UPDATE_CHANNEL
               value: {{ . }}
           resources:

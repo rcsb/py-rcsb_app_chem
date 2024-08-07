@@ -4,9 +4,6 @@
 
 replicaCount: 2
 revisionHistoryLimit: 3
-    
-# vaultSecretStoreName is the name of the ClusterSecretStore resource to pull secret credentials
-vaultSecretStoreName: "rcsb-vault"
 
 # Define container liveness and readiness checks
 # A Pod is considered "live" when it is able to respond to client requests.

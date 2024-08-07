@@ -33,9 +33,5 @@ COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 
 USER ubuntu
 
-# Workaround to mount OpenEye license secret into runner container
-RUN mkdir ~/oe-license && \
-    ln -s ~/.secrets/oe-license.txt ~/oe-license/oe-license.txt
-
 # Launch the service
 CMD ["/app/launch.sh"]

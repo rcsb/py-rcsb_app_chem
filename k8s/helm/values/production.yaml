@@ -57,12 +57,12 @@ service:
 
 resources:
   limits:
-    cpu: 256m
-    memory: 8Gi
+    cpu: "1.5"
+    memory: "4.5Gi"
     ephemeral-storage: "9G"
   requests:
-    cpu: 4m
-    memory: 1Gi
+    cpu: "0.5"
+    memory: "2.5Gi"
     ephemeral-storage: "9G"
 
 autoscaling:
@@ -87,7 +87,7 @@ externalSecret:
 useSecretsVolume: true
 secretVolumes:
   name: oe-license
-  mountPath: /home/ubuntu/.secrets
+  mountPath: /home/ubuntu/oe-license
   filename: oe-license.txt
   secretName: oe-license-file
 

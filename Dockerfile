@@ -27,11 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends libcairo2=1.16.
     && chown -R ubuntu /app
 
 COPY --from=build-image --chown=ubuntu:ubuntu /root/.local /home/ubuntu/.local
-COPY --chown=ubuntu:ubuntu ./scripts/gunicorn_conf.py /app/gunicorn_conf.py
-COPY --chown=ubuntu:ubuntu ./scripts/LAUNCH_GUNICORN.sh /app/launch.sh
 COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 
 USER ubuntu
 
 # Launch the service
-CMD ["/app/launch.sh"]
+CMD ["gunicorn", "rcsb.app.chem.main:app"]

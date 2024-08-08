@@ -32,4 +32,4 @@ COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 USER ubuntu
 
 # Launch the service
-ENTRYPOINT ["/home/ubuntu/.local/bin/gunicorn", "rcsb.app.chem.main:app"]
+ENTRYPOINT ["gunicorn", "rcsb.app.chem.main:app"]

@@ -100,6 +100,6 @@ podEnvVars:
     value: /home/ubuntu/oe-license/oe-license.txt
 
 arguments:
-  - --timeout
-  - 300
-
+  - --capture-output 
+  - --enable-stdio-inheritance 
+  - --worker-class uvicorn.workers.UvicornWorker 

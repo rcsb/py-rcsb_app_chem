@@ -93,8 +93,27 @@ secretVolumes:
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME
-    value: bl-west.rcsb.org
-  - name: CHEM_SEARCH_DATA_PATH
+    value: buildlocker.production
     value: 4-coastal
   - name: OE_LICENSE
     value: /home/ubuntu/oe-license/oe-license.txt
+  - name: GIT_PYTHON_REFRESH
+    value: quiet
+  - name: CHEM_SEARCH_CACHE_PATH
+    value: /app/CACHE
+  - name: CHEM_DEPICT_CACHE_PATH
+    value: /app/CACHE
+
+arguments:
+  - --timeout
+  - "300"
+  - --workers
+  - "1"
+  - --bind 
+  - "0.0.0.0:8000"
+  - --capture-output 
+  - --enable-stdio-inheritance 
+  - --worker-class 
+  - uvicorn.workers.UvicornWorker 
+  - --chdir
+  - /app

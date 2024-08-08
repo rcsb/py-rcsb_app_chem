@@ -93,8 +93,7 @@ secretVolumes:
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME
-    value: bl-west.rcsb.org
-  - name: CHEM_SEARCH_DATA_PATH
+    value: buildlocker.production
     value: 4-coastal
   - name: OE_LICENSE
     value: /home/ubuntu/oe-license/oe-license.txt

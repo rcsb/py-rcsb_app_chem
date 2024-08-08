@@ -101,11 +101,11 @@ podEnvVars:
 
 arguments:
   - --timeout
-  - "300"
+  - 300
   - --workers
-  - "2"
+  - 2
   - --bind 
-  - "0.0.0.0:80"
+  - 0.0.0.0:80
   - --capture-output 
   - --enable-stdio-inheritance 
   - --worker-class uvicorn.workers.UvicornWorker 

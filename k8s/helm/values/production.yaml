@@ -98,6 +98,14 @@ podEnvVars:
     value: 4-coastal
   - name: OE_LICENSE
     value: /home/ubuntu/oe-license/oe-license.txt
+  - name: GIT_PYTHON_REFRESH
+    value: quiet
+  - name: CHEM_SEARCH_CACHE_PATH
+    value: /app/CACHE
+  - name: CHEM_DEPICT_CACHE_PATH
+    value: /app/CACHE
+  - name: GIT_PYTHON_REFRESH
+    value: quiet
 
 arguments:
   - --timeout
@@ -109,3 +117,9 @@ arguments:
   - --capture-output 
   - --enable-stdio-inheritance 
   - --worker-class uvicorn.workers.UvicornWorker 
+  - --chdir
+  - /app
+
+command:
+  - gunicorn
+  - rcsb.app.chem.main:app

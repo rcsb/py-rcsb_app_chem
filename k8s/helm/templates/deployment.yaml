@@ -44,8 +44,10 @@ spec:
         - name: {{ $.Chart.Name }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
-          command: ["gunicorn", "rcsb.app.chem.main:app"]
-          args: ["--timeout", "300", "--workers", "1", "--bind", "0.0.0.0:8000","--capture-output", "--enable-stdio-inheritance","--worker-class", "uvicorn.workers.UvicornWorker", "--chdir", "/app/"]
+          command: 
+            {{- toYaml $.Values.command | nindent 12 }}
+          args: 
+            {{- toYaml $.Values.arguments | nindent 12 }}
           securityContext:
             {{- toYaml $.Values.containerSecurityContext | nindent 12 }}
           ports:
@@ -69,8 +71,6 @@ spec:
             {{- toYaml $.Values.podEnvVars | nindent 12 }}
             - name: CHEM_SEARCH_UPDATE_CHANNEL
               value: {{ . }}
-            - name: GIT_PYTHON_REFRESH
-              value: quiet
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:

@@ -44,8 +44,8 @@ spec:
         - name: {{ $.Chart.Name }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
-          args: 
-            {{- toYaml $.Values.arguments | nindent 12 }}
+          command: ["gunicorn", "rcsb.app.chem.main:app"]
+          args: ["--timeout", "300", "--workers", "2", "--bind", "0.0.0.0:80","--capture-output", "--enable-stdio-inheritance","--worker-class uvicorn.workers.UvicornWorker"]
           securityContext:
             {{- toYaml $.Values.containerSecurityContext | nindent 12 }}
           ports:

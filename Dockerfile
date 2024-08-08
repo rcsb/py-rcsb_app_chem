@@ -32,4 +32,4 @@ COPY --chown=ubuntu:ubuntu ./rcsb /app/rcsb
 USER ubuntu
 
 # Launch the service
-CMD ["gunicorn", "rcsb.app.chem.main:app"]
+CMD ["/home/ubuntu/.local/bin/gunicorn", "rcsb.app.chem.main:app"]

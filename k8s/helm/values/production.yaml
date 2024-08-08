@@ -117,7 +117,3 @@ arguments:
   - uvicorn.workers.UvicornWorker 
   - --chdir
   - /app
-
-command:
-  - gunicorn
-  - rcsb.app.chem.main:app

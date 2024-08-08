@@ -16,3 +16,4 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
+      mainline_branch: "k8s-staging"

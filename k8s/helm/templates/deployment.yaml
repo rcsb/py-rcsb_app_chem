@@ -44,11 +44,10 @@ spec:
         - name: {{ $.Chart.Name }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
-          args: 
-            args:          
-              {{ range .Values.arguments }}
-                - {{ . }}
-              {{ end }}
+          args:        
+            {{ range .Values.arguments }}
+              - {{ . }}
+            {{ end }}
           securityContext:
             {{- toYaml $.Values.containerSecurityContext | nindent 12 }}
           ports:

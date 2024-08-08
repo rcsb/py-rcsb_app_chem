@@ -109,9 +109,9 @@ arguments:
   - --timeout
   - "300"
   - --workers
-  - "2"
+  - "1"
   - --bind 
-  - "0.0.0.0:80"
+  - "0.0.0.0:8000"
   - --capture-output 
   - --enable-stdio-inheritance 
   - --worker-class 

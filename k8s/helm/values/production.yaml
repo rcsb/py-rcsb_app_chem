@@ -104,8 +104,6 @@ podEnvVars:
     value: /app/CACHE
   - name: CHEM_DEPICT_CACHE_PATH
     value: /app/CACHE
-  - name: GIT_PYTHON_REFRESH
-    value: quiet
 
 arguments:
   - --timeout

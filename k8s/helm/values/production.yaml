@@ -114,7 +114,8 @@ arguments:
   - "0.0.0.0:80"
   - --capture-output 
   - --enable-stdio-inheritance 
-  - --worker-class uvicorn.workers.UvicornWorker 
+  - --worker-class 
+  - uvicorn.workers.UvicornWorker 
   - --chdir
   - /app
 

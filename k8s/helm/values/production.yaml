@@ -75,7 +75,8 @@ autoscaling:
 # from an external Vault service.
 
 externalSecret:
-  enabled: true
+  enabled: false
+  # Other things need the open eye license, so this secret is moved to rcsb-kube/production
   secretStoreRefName: "rcsb-vault"
   data:
     - secretKey: oe-license.txt

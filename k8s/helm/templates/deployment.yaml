@@ -91,6 +91,6 @@ spec:
         {{- if $.Values.useSecretsVolume }}
         - name: {{ include "helm_chart.fullname" $ }}-secret
           secret:
-            secretName: {{ include "helm_chart.fullname" $ }}-secret
+            secretName: {{ $.Values.secretName }}
         {{- end }}
 {{- end }}

@@ -1,0 +1,96 @@
+{{- range tuple "a" "b" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm_chart.fullname" $ }}-{{ . }}
+  labels:
+    {{- include "helm_chart.labels" $ | nindent 4 }}
+    rcsb.org/path: {{ . | quote }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  revisionHistoryLimit: {{ $.Values.revisionHistoryLimit}}
+  selector:
+    matchLabels:
+      {{- include "helm_chart.selectorLabels" $ | nindent 6 }}
+      rcsb.org/path: {{ . | quote }}
+  strategy:
+    type: {{ $.Values.deploymentStrategy.type }}
+    {{- if eq $.Values.deploymentStrategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxSurge: {{ $.Values.deploymentStrategy.maxSurge }}
+      maxUnavailable: {{ $.Values.deploymentStrategy.maxUnavailable }}
+    {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm_chart.selectorLabels" $ | nindent 8 }}
+        rcsb.org/path: {{ . | quote }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "helm_chart.selectorLabels" $ | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+      imagePullSecrets:
+        - name: {{ $.Values.imagePullSecrets }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          args: 
+            {{- toYaml $.Values.arguments | nindent 12 }}
+          securityContext:
+            {{- toYaml $.Values.containerSecurityContext | nindent 12 }}
+          ports:
+            - containerPort: {{ $.Values.service.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{ $.Values.livenessProbe.initialDelaySeconds }}
+            failureThreshold: {{ $.Values.livenessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.livenessProbe.periodSeconds }}
+            httpGet:
+              path: {{ $.Values.livenessProbe.http.path }}
+              port: {{ $.Values.service.containerPort }}
+          readinessProbe:
+            initialDelaySeconds: {{ $.Values.readinessProbe.initialDelaySeconds }}
+            failureThreshold: {{ $.Values.readinessProbe.failureThreshold }}
+            periodSeconds: {{ $.Values.readinessProbe.periodSeconds }}
+            httpGet:
+              path: {{ $.Values.readinessProbe.http.path }}
+              port: {{ $.Values.service.containerPort }}
+          env:
+            {{- toYaml $.Values.podEnvVars | nindent 12 }}
+            - name: CHEM_SEARCH_UPDATE_CHANNEL
+              value: {{ . }}
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: appfs   # Required for app to write to /app but enforce readonly root file system.
+              mountPath: /app/CACHE
+            - name: tmpfs   # Required for app to write to /tmp but enforce readonly root file system.
+              mountPath: /tmp
+            {{- if $.Values.useSecretsVolume }}
+            - name: {{ include "helm_chart.fullname" $ }}-secret
+              mountPath: "{{ $.Values.secretVolumes.mountPath }}"
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: tmpfs
+          emptyDir:
+            medium: Memory
+        - name: appfs
+          emptyDir:
+            medium: Memory
+        {{- if $.Values.useSecretsVolume }}
+        - name: {{ include "helm_chart.fullname" $ }}-secret
+          secret:
+            secretName: {{ $.Values.secretVolumes.secretName }}
+        {{- end }}
+{{- end }}

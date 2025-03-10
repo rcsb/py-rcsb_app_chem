@@ -7,7 +7,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
     libcairo2=1.16.0-7 \
-    && pip install --no-cache-dir --upgrade pip==2025.0.1 cmake==3.27.0 \
+    && pip install --no-cache-dir --upgrade pip==25.0.1 cmake==3.27.0 \
     && pip install --no-cache-dir --user --requirement /app/requirements.txt
 
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:3.9-slim AS runtime-image

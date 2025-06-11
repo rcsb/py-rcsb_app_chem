@@ -25,7 +25,7 @@ readinessProbe:
 image:
   repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
   pullPolicy: Always
-  tag: "production"
+  tag: "k8s-staging"
 
 imagePullSecrets: "harbor-docker-registry-conf"
 

@@ -2,7 +2,7 @@
 # Any of the values in K8s/helm/values.yaml can be overridden here specific to production environment. 
 
 image:
-  tag: "production"
+  tag: "k8s-staging"
 
 resources:
   limits:

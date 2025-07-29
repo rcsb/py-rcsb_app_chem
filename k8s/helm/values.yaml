@@ -1,0 +1,89 @@
+# This is a DEFAULT values file. 
+# All the dynamic values in helm templates must be stated in this file.
+# Any environment specific values which needs to be overridden should be 
+# specified in environment specific values file in values directory.
+
+replicaCount: 2
+revisionHistoryLimit: 3
+
+# Define container liveness and readiness checks
+# A Pod is considered "live" when it is able to respond to client requests.
+# A Pod is considered "ready" when it has completed initialization and should be one of the backends for a K8s Service resource.
+livenessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 30
+  failureThreshold: 6
+  http:
+    path: /alive
+readinessProbe:
+  initialDelaySeconds: 120
+  periodSeconds: 30
+  failureThreshold: 6
+  http:
+    path: /alive
+
+
+image:
+  repository: "harbor.devops.k8s.rcsb.org/rcsb/rcsb-chemsearch"
+  pullPolicy: Always
+  tag: null
+
+imagePullSecrets: "harbor-docker-registry-conf"
+
+deploymentStrategy:
+  #https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  #Type is either RollingUpdate or Recreate
+  type: "RollingUpdate"
+  #For rolling update, what percentage of total pods can be created above desired amount
+  maxSurge: 25%
+  #For rolling update, what percentage of total pods can be brought down to update
+  maxUnavailable: 25%
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+service:
+  type: ClusterIP
+  port: 80
+  containerPort: 8000
+
+resources:
+  limits:
+    cpu: null
+    memory: null
+  requests:
+    cpu: null
+    memory: null
+
+# useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
+useSecretsVolume: true
+secretVolumes:
+  name: oe-license
+  mountPath: /home/ubuntu/oe-license
+  filename: oe-license.txt
+  secretName: oe-license-file
+
+podEnvVars: null
+
+arguments:
+  - --timeout
+  - "300"
+  - --workers
+  - "1"
+  - --bind 
+  - "0.0.0.0:8000"
+  - --capture-output 
+  - --enable-stdio-inheritance 
+  - --worker-class 
+  - uvicorn.workers.UvicornWorker 
+  - --chdir
+  - /app

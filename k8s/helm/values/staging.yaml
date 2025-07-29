@@ -1,0 +1,29 @@
+# This file is specific to staging environmemt. 
+# Any of the values in K8s/helm/values.yaml can be overridden here specific to staging environment. 
+
+image:
+  tag: "k8s-staging"
+
+resources:
+  limits:
+    cpu: "1.5"
+    memory: "4.5Gi"
+    ephemeral-storage: "9G"
+  requests:
+    cpu: "0.5"
+    memory: "2.5Gi"
+    ephemeral-storage: "9G"
+
+podEnvVars:
+  - name: CHEM_SEARCH_DATA_HOSTNAME
+    value: buildlocker.production
+  - name: CHEM_SEARCH_DATA_PATH
+    value: 4-coastal
+  - name: OE_LICENSE
+    value: /home/ubuntu/oe-license/oe-license.txt
+  - name: GIT_PYTHON_REFRESH
+    value: quiet
+  - name: CHEM_SEARCH_CACHE_PATH
+    value: /app/CACHE
+  - name: CHEM_DEPICT_CACHE_PATH
+    value: /app/CACHE

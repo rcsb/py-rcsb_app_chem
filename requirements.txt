@@ -1,5 +1,5 @@
 --extra-index-url https://pypi.anaconda.org/OpenEye/simple
-OpenEye-toolkits >= 2022.2.2
+OpenEye-toolkits == 2022.2.2
 fastapi == 0.68.0
 # pydantic == 1.7.4
 gunicorn == 20.0.4

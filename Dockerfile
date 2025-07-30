@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION="3.9"
+ARG PYTHON_VERSION="3.10"
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:$PYTHON_VERSION-slim AS builder
 
 WORKDIR /app/

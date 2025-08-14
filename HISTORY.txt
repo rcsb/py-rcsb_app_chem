@@ -31,3 +31,4 @@
    9-Jan-2023  - V0.40 Configuration changes to support tox 4
   9-Dec-2024  - V0.41 Update Azure pipelines to use latest macOS, Ubuntu, and python 3.10
   4-Mar-2025  - V0.42 Add support for K8s deployment; update azure pipelines
+  13-Aug-2025 - V0.43 Openeye-toolkit version update

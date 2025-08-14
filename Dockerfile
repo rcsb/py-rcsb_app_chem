@@ -1,4 +1,4 @@
-FROM harbor.devops.k8s.rcsb.org/dockerhub/python:3.9-slim-bookworm AS builder
+FROM harbor.devops.k8s.rcsb.org/dockerhub/python:3.9-slim-bookworm AS build-image
 
 WORKDIR /app/
 

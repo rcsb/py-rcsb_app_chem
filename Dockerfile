@@ -1,3 +1,4 @@
+ARG PYTHON_VERSION="3.10"
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:$PYTHON_VERSION-slim-bookworm AS build-image
 WORKDIR /app/
 

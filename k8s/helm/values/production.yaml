@@ -18,8 +18,8 @@ autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 6
-  targetCPUUtilization: 225
-  targetMemoryUtilization: 175
+  targetCPUUtilizationPercentage: 225
+  targetMemoryUtilizationPercentage: 175
 
 podEnvVars:
   - name: CHEM_SEARCH_DATA_HOSTNAME

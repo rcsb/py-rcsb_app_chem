@@ -15,21 +15,21 @@ spec:
   minReplicas: {{ $.Values.autoscaling.minReplicas }}
   maxReplicas: {{ $.Values.autoscaling.maxReplicas }}
   metrics:
-    {{- if $.Values.autoscaling.targetCPUUtilization }}
+    {{- if $.Values.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
-          type: AverageValue
-          averageValue: {{ $.Values.autoscaling.targetCPUUtilization }}
+          type: Utilization
+          averageUtilization: {{ $.Values.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if $.Values.autoscaling.targetMemoryUtilization }}
+    {{- if $.Values.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
-          type: AverageValue
-          averageValue: {{ $.Values.autoscaling.targetMemoryUtilization }}
+          type: Utilization
+          averageUtilization: {{ $.Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
 {{- end }}

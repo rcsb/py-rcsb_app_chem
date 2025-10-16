@@ -64,6 +64,13 @@ resources:
     cpu: null
     memory: null
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilization: 80
+
 # useSecretsVolume if your application will mount a secret from the Vault service as a file on the filesystem.
 useSecretsVolume: true
 secretVolumes:

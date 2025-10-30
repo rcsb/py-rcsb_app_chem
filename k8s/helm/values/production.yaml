@@ -14,6 +14,48 @@ resources:
     memory: "2.5Gi"
     ephemeral-storage: "9G"
 
+# Ingress resource changes would lead to updates in production URL. Review with DevOps before updating.
+ingress:
+  enabled: true
+  className: haproxy
+  annotations:
+    cert-manager.io/cluster-issuer: rutgers-acme
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chemsearch.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch.east.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch.west.k8s.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch-east.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: chemsearch-west.rcsb.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - chemsearch.k8s.rcsb.org
+        - chemsearch.east.k8s.rcsb.org
+        - chemsearch.west.k8s.rcsb.org
+        - chemsearch.rcsb.org
+        - chemsearch-east.rcsb.org
+        - chemsearch-west.rcsb.org
+      secretName: chemsearch.k8s.rcsb.org-tls
+
 autoscaling:
   enabled: true
   minReplicas: 2

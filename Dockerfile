@@ -8,7 +8,7 @@ COPY . /app/
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
     libcairo2=1.16.0-7 \
-    && pip install --no-cache-dir --upgrade pip==25.0.1 cmake==3.27.0 hatch>=1.16.2 wheel>=0.43.0 setuptools>=40.8.0 \
+    && pip install --no-cache-dir --upgrade pip==25.0.1 cmake==3.27.0 hatch==1.16.2 wheel==0.45.1 setuptools==80.9.0 \
     && hatch run pip install --no-cache-dir .
 
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:$PYTHON_VERSION-slim-bookworm AS runtime-image

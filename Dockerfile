@@ -2,13 +2,14 @@ ARG PYTHON_VERSION="3.10"
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:$PYTHON_VERSION-slim-bookworm AS build-image
 WORKDIR /app/
 
-# copy requirements file (should include selected versions of uvicorn gunicorn)
-COPY ./requirements.txt /app/requirements.txt
+# Copy project files (dependencies should include selected versions of uvicorn gunicorn)
+COPY pyproject.toml /app/
+COPY . /app/
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.9 \
     libcairo2=1.16.0-7 \
-    && pip install --no-cache-dir --upgrade pip==25.0.1 cmake==3.27.0 \
-    && pip install --no-cache-dir --user --requirement /app/requirements.txt
+    && pip install --no-cache-dir --upgrade pip==25.0.1 cmake==3.27.0 hatch>=1.16.2 wheel>=0.43.0 setuptools>=40.8.0 \
+    && hatch run pip install --no-cache-dir .
 
 FROM harbor.devops.k8s.rcsb.org/dockerhub/python:$PYTHON_VERSION-slim-bookworm AS runtime-image
 LABEL maintainer="RCSB IT <it@rcsb.org>"

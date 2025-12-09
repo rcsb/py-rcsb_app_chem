@@ -25,9 +25,10 @@ import resource
 import time
 import unittest
 
-from rcsb.app.chem import __version__
+from importlib.metadata import version as get_package_version
 from rcsb.app.chem.ReloadDependencies import ReloadDependencies
 
+__version__ = get_package_version("rcsb.app.chem")
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))

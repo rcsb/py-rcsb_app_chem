@@ -44,6 +44,10 @@ spec:
         - name: {{ $.Chart.Name }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          lifecycle:             
+            preStop:
+              exec:
+                command: ["sleep", "6"]
           args: 
             {{- toYaml $.Values.arguments | nindent 12 }}
           securityContext:

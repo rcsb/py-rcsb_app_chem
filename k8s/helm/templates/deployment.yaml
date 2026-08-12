@@ -44,6 +44,7 @@ spec:
         - name: {{ $.Chart.Name }}
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ## A lifecycle preStop hook is added to allow pods to gracefully handle existing requests before termination, helping prevent 5XX errors caused by abrupt pod termination.
           lifecycle:             
             preStop:
               exec:

@@ -1,0 +1,88 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rcsb.app.chem"
+description = "RCSB Chemical Search Service"
+version = "0.44"
+readme = "README.md"
+authors = [
+    { name="John Westbrook", email="john.westbrook@rcsb.org" }
+]
+maintainers = [
+    { name="Dennis Piehl", email="dennis.piehl@rcsb.org" }
+]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+]
+
+dependencies = [
+    # "OpenEye-toolkits >= 2024.1.1",  # Use this when updating to Python 3.12
+    "OpenEye-toolkits == 2022.2.2",
+    #
+    "rcsb.utils.io >= 1.48",
+    "rcsb.utils.chem >= 0.85",
+    "fastapi == 0.68.0",
+    "gunicorn == 23.0.0",
+    "requests >= 2.24.0,<3.0.0",
+    "aiofiles >= 0.5.0,<0.6.0",
+    "jinja2 >= 2.11.2,<3.0.0",
+    "uvicorn[standard] == 0.38.0",
+    "async_exit_stack >= 1.0.1,<2.0.0",
+    "async_generator >= 1.10,<2.0.0",
+]
+
+[project.optional-dependencies]
+tests = ["tox", "pylint", "black>=21.5b1", "flake8", "coverage", "check-manifest"]
+
+[project.urls]
+Homepage = "https://github.com/rcsb/py-rcsb_app_chem"
+
+# ----------------  hatch configuration ----------------
+[tool.hatch.build.targets.sdist]
+include = [
+    "/rcsb/**",
+    "/README.md",
+    "/LICENSE",
+    "/HISTORY.txt",
+    "/pyproject.toml",
+]
+exclude = [
+    "/rcsb/app/test*/test*-*",
+    "/rcsb/mock-*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["rcsb"]
+exclude = [
+    "/rcsb/app/test*",
+    "/rcsb/mock-*",
+]
+
+[tool.hatch.envs.default]
+skip-install = true
+dependencies = ["OpenEye-toolkits==2022.2.2"]
+
+[tool.hatch.envs.default.env-vars]
+PIP_EXTRA_INDEX_URL = "https://pypi.anaconda.org/OpenEye/simple"
+
+# ----------------  test configuration ----------------
+[tool.hatch.envs.hatch-test]
+dependencies = ["tox"]
+
+[tool.hatch.envs.hatch-test.scripts]
+run = ["tox"]
+
+# ----------------  UV configuration ----------------
+[tool.uv]
+extra-index-url = ["https://pypi.anaconda.org/OpenEye/simple"]
+managed = false  # This prevents uv from automatically creating venvs within individual packages when running 'uv run ...' from within the package directory

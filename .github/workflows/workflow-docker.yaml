@@ -1,15 +1,32 @@
 name: Run CI/CD Workflow
 
 on:
-  push:
-    paths-ignore:
-      - "k8s/**"
-  # Weekly rebuild so the image picks up base-image / OS security updates even
-  # when no application code has changed. Scheduled runs use the default branch
-  # (master), so the called workflow still re-tags the result as "production".
-  schedule:
-    - cron: "0 12 * * 0"  # Sundays 12:00 UTC
   workflow_dispatch:
+  #
+  # Weekly rebuild, so that the image continues to pick up base-image and OS
+  # security updates even when no application code has changed.
+  schedule:
+    # Time is based on UTC timezone
+    #  ┌───────────── minute (0 - 59)
+    #  │ ┌───────────── hour (0 - 23)
+    #  │ │ ┌───────────── day of the month (1 - 31)
+    #  │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #  │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #  │ │ │ │ │
+    #  * * * * *
+    - cron: "0 0 * * FRI"  # 0 UTC Friday
+  #
+  # Also run for new PRs and PR updates
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  #
+  # And run when pushed to master
+  push:
+    branches:
+      - master
 
 jobs:
   run-workflow:

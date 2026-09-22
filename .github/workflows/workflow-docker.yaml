@@ -5,8 +5,9 @@ on:
     paths-ignore:
       - "k8s/**"
   # Weekly rebuild so the image picks up base-image / OS security updates even
-  # when no application code has changed. Scheduled runs use the default branch
-  # (master), so the called workflow still re-tags the result as "production".
+  # when no application code has changed. Scheduled runs are tagged "staging"
+  # only (see do_staging_build / do_production_build below); "production" is
+  # promoted only by a real code push to master.
   schedule:
     - cron: "0 12 * * 0"  # Sundays 12:00 UTC
   workflow_dispatch:
@@ -21,3 +22,8 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
+      # Scheduled (weekly) rebuilds re-tag as "staging" only; pushes keep the
+      # previous behavior of re-tagging as "production". Both re-tag jobs in the
+      # called workflow additionally require ref_name == master.
+      do_staging_build: ${{ github.event_name == 'schedule' && 'true' || 'false' }}
+      do_production_build: ${{ github.event_name == 'schedule' && 'false' || 'true' }}

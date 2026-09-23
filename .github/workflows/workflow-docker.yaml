@@ -1,15 +1,13 @@
 name: Run CI/CD Workflow
 
 on:
-  # Run when pushed to master
+  # Run when pushed to any branch
   push:
-    branches:
-      - master
     paths-ignore:
       - "k8s/**"
   workflow_dispatch:
   #
-  # Rebuild weekly, so that the image continues to pick up base-image and OS
+  # Rebuild monthly, so that the image continues to pick up base-image and OS
   # security updates even when no application code has changed.
   schedule:
     # Time is based on UTC timezone
@@ -20,14 +18,7 @@ on:
     #  │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
     #  │ │ │ │ │
     #  * * * * *
-    - cron: "0 12 * * 0"  # Sundays 12:00 UTC
-  #
-  # Also run for new PRs and PR updates
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
+    - cron: "0 12 1 * *"  # 12:00 UTC on the first of each month
 
 jobs:
   run-workflow:

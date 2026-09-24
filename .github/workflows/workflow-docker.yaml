@@ -1,10 +1,24 @@
 name: Run CI/CD Workflow
 
 on:
+  # Run when pushed to any branch
   push:
     paths-ignore:
       - "k8s/**"
   workflow_dispatch:
+  #
+  # Rebuild monthly, so that the image continues to pick up base-image and OS
+  # security updates even when no application code has changed.
+  schedule:
+    # Time is based on UTC timezone
+    #  ┌───────────── minute (0 - 59)
+    #  │ ┌───────────── hour (0 - 23)
+    #  │ │ ┌───────────── day of the month (1 - 31)
+    #  │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #  │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #  │ │ │ │ │
+    #  * * * * *
+    - cron: "0 12 1 * *"  # 12:00 UTC on the first of each month
 
 jobs:
   run-workflow:
@@ -16,3 +30,17 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
+  restart-k8s-prod-deployment:
+    name: "Restart production deployments"
+    uses: rcsb/devops-cicd-github-actions/.github/workflows/restart_k8s_deployment.yaml@master
+    needs:
+      - "run-workflow"
+    if: github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        coast: [ 'west', 'east' ]
+        path: [ 'a', 'b' ]
+    with:
+      namespace: production
+      region: ${{ matrix.coast }}
+      deployment_name: production-rcsb-chemsearch-${{ matrix.path }}

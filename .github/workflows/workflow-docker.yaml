@@ -30,3 +30,17 @@ jobs:
       repo_project: "rcsb"
       docker_image_name: "rcsb-chemsearch"
       docker_build_context: "."
+  restart-k8s-prod-deployment:
+    name: "Restart production deployments"
+    uses: rcsb/devops-cicd-github-actions/.github/workflows/restart_k8s_deployment.yaml@master
+    needs:
+      - "run-workflow"
+    if: github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        coast: [ 'west', 'east' ]
+        path: [ 'a', 'b' ]
+    with:
+      namespace: production
+      region: ${{ matrix.coast }}
+      deployment_name: production-rcsb-chemsearch-${{ matrix.path }}

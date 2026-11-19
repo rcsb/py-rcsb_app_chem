@@ -69,7 +69,19 @@ autoscaling:
   targetCPUUtilizationPercentage: 225
   targetMemoryUtilizationPercentage: 175
 
+# Same bucket and per-path directories as rcsb-wuw's production bl_host_name and bl_upload_path
+chemSearchStash:
+  url: s3://wuw-data-stash
+  path:
+    a: /a
+    b: /b
+  endpointUrl: http://minio.production
+  credentialsSecret: ro-minio-creds
+
 podEnvVars:
+  # TODO: Remove CHEM_SEARCH_DATA_HOSTNAME and CHEM_SEARCH_DATA_PATH (legacy BuildLocker source) once an image that
+  # reads chemSearchStash is deployed. Until then they keep older images restoring from BuildLocker, and newer
+  # images ignore them because CHEM_SEARCH_STASH_URL is set.
   - name: CHEM_SEARCH_DATA_HOSTNAME
     value: buildlocker.production
   - name: CHEM_SEARCH_DATA_PATH

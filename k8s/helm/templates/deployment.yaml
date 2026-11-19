@@ -74,6 +74,27 @@ spec:
             {{- toYaml $.Values.podEnvVars | nindent 12 }}
             - name: CHEM_SEARCH_UPDATE_CHANNEL
               value: {{ . }}
+            {{- $path := . }}
+            {{- with $.Values.chemSearchStash }}
+            {{- if .url }}
+            - name: CHEM_SEARCH_STASH_URL
+              value: {{ .url | quote }}
+            - name: CHEM_SEARCH_STASH_PATH
+              value: {{ required (printf "chemSearchStash.path.%s is required" $path) (index .path $path) | quote }}
+            - name: AWS_ENDPOINT_URL
+              value: {{ required "chemSearchStash.endpointUrl is required" .endpointUrl | quote }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "chemSearchStash.credentialsSecret is required" .credentialsSecret }}
+                  key: access-key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .credentialsSecret }}
+                  key: secret-key
+            {{- end }}
+            {{- end }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:

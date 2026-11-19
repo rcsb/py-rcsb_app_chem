@@ -54,19 +54,51 @@ app.add_middleware(
 # http --verbose OPTIONS :8000/status  Access-Control-Request-Method:GET Origin:https://id-localtest.mydomain.co
 
 
+def restoreSearchDependencies(ccsw):
+    """Fetch this service path's search dependency bundle from remote storage and unpack it in the local cache.
+
+    The source is selected from the environment:
+
+        CHEM_SEARCH_STASH_URL, CHEM_SEARCH_STASH_PATH: S3/MinIO stash written by the weekly-update etl-chem
+            workflow (e.g. s3://wuw-data-stash and /a); endpoint and credentials come from the standard
+            AWS_ENDPOINT_URL, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY variables.
+        CHEM_SEARCH_DATA_HOSTNAME, CHEM_SEARCH_DATA_PATH: legacy HTTP source (BuildLocker), used only when
+            CHEM_SEARCH_STASH_URL isn't set.
+        CHEM_SEARCH_UPDATE_CHANNEL: A or B, the bundle label for this service path.
+
+    If no source is configured, the existing local cache is used as is.
+
+    Raises:
+        RuntimeError: a source is configured but incomplete, or the bundle can't be restored.
+    """
+    clChannel = os.environ.get("CHEM_SEARCH_UPDATE_CHANNEL", None)
+    stashUrl = os.environ.get("CHEM_SEARCH_STASH_URL", None)
+    if stashUrl:
+        dataUrl = stashUrl
+        dataPath = os.environ.get("CHEM_SEARCH_STASH_PATH", None)
+    else:
+        dataHost = os.environ.get("CHEM_SEARCH_DATA_HOSTNAME", None)
+        dataUrl = "http://" + dataHost if dataHost else None
+        dataPath = os.environ.get("CHEM_SEARCH_DATA_PATH", None)
+    #
+    logger.info("Dependency data url %r path %r update channel %r", dataUrl, dataPath, clChannel)
+    if not dataUrl:
+        logger.info("No remote dependency data configured - using the local cache")
+        return
+    if not dataPath or not clChannel or clChannel.upper() not in ["A", "B"]:
+        raise RuntimeError("Incomplete remote dependency settings: url %r path %r update channel %r" % (dataUrl, dataPath, clChannel))
+    ok = ccsw.restoreDependencies(dataUrl, dataPath, bundleLabel=clChannel.upper())
+    if not ok:
+        raise RuntimeError("Failed to restore search dependencies from url %r path %r update channel %r" % (dataUrl, dataPath, clChannel))
+    logger.info("Restored search dependencies from url %r path %r update channel %r", dataUrl, dataPath, clChannel)
+
+
 @app.on_event("startup")
 async def startupEvent():
     logger.info("Startup - loading search dependencies")
     #
     ccsw = ChemCompSearchWrapper()
-    #
-    clDataUrl = os.environ.get("CHEM_SEARCH_DATA_HOSTNAME", None)
-    clDataPath = os.environ.get("CHEM_SEARCH_DATA_PATH", None)
-    clChannel = os.environ.get("CHEM_SEARCH_UPDATE_CHANNEL", None)
-    #
-    logger.info("Dependency data host %r path %r update channel %r", clDataUrl, clDataPath, clChannel)
-    if clDataUrl and clDataPath and clChannel in ["A", "B", "a", "b"]:
-        ccsw.restoreDependencies("http://" + clDataUrl, clDataPath, bundleLabel=clChannel.upper())
+    restoreSearchDependencies(ccsw)
     #
     ok1 = ccsw.readConfig()
     ok2 = ccsw.updateChemCompIndex(useCache=True)

@@ -27,38 +27,40 @@ ingress:
       163.114.230.0/24, 163.114.232.0/24
   hosts:
     - host: chemsearch.k8s.rcsb.org
+      # no coast: this name can resolve to either cluster, so both request its cert
       paths:
         - path: /
           pathType: ImplementationSpecific
     - host: chemsearch.east.k8s.rcsb.org
+      coast: east
       paths:
         - path: /
           pathType: ImplementationSpecific
     - host: chemsearch.west.k8s.rcsb.org
+      coast: west
       paths:
         - path: /
           pathType: ImplementationSpecific
     - host: chemsearch.rcsb.org
+      # no coast: this name can resolve to either cluster, so both request its cert
       paths:
         - path: /
           pathType: ImplementationSpecific
     - host: chemsearch-east.rcsb.org
+      coast: east
       paths:
         - path: /
           pathType: ImplementationSpecific
     - host: chemsearch-west.rcsb.org
+      coast: west
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls:
-    - hosts:
-        - chemsearch.k8s.rcsb.org
-        - chemsearch.east.k8s.rcsb.org
-        - chemsearch.west.k8s.rcsb.org
-        - chemsearch.rcsb.org
-        - chemsearch-east.rcsb.org
-        - chemsearch-west.rcsb.org
-      secretName: chemsearch.k8s.rcsb.org-tls
+  # One single-name cert per host in ingress.hosts (secret <host>-tls); the current
+  # ACME provider rejects multi-SAN requests. A host's `coast` is the cluster whose
+  # DNS it resolves to; only that cluster requests its cert (ingress.coast is set by
+  # ArgoCD from the cluster's regionID).
+  tlsPerHost: true
 
 autoscaling:
   enabled: true

@@ -32,3 +32,4 @@
   9-Dec-2024  - V0.41 Update Azure pipelines to use latest macOS, Ubuntu, and python 3.10
   4-Mar-2025  - V0.42 Add support for K8s deployment; update azure pipelines
   13-Aug-2025 - V0.43 Openeye-toolkit version update
+  19-Nov-2026 - V0.44 Restore the search dependency bundle from the S3/MinIO stash (CHEM_SEARCH_STASH_URL/_PATH); fail startup if a configured restore fails

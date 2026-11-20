@@ -81,6 +81,19 @@ secretVolumes:
 
 podEnvVars: null
 
+# S3/MinIO stash of the chemical search dependency bundle built by the weekly-update etl-chem DAG.
+# Each path's pods restore <url>/<path.a|b>/<A|B>-ChemCompSearchWrapperData.tar.gz at startup.
+# Leave url empty to skip the stash (the app then falls back to CHEM_SEARCH_DATA_HOSTNAME, if set).
+chemSearchStash:
+  url: ""
+  path:
+    a: ""
+    b: ""
+  # S3 endpoint of the MinIO service
+  endpointUrl: ""
+  # Secret with the read credentials, keys access-key and secret-key
+  credentialsSecret: ""
+
 arguments:
   - --timeout
   - "300"

@@ -69,11 +69,16 @@ autoscaling:
   targetCPUUtilizationPercentage: 225
   targetMemoryUtilizationPercentage: 175
 
+# Same bucket and per-path directories as rcsb-wuw's production bl_host_name and bl_upload_path
+chemSearchStash:
+  url: s3://wuw-data-stash
+  path:
+    a: /a
+    b: /b
+  endpointUrl: http://minio.production
+  credentialsSecret: ro-minio-creds
+
 podEnvVars:
-  - name: CHEM_SEARCH_DATA_HOSTNAME
-    value: buildlocker.production
-  - name: CHEM_SEARCH_DATA_PATH
-    value: 4-coastal
   - name: OE_LICENSE
     value: /home/ubuntu/oe-license/oe-license.txt
   - name: GIT_PYTHON_REFRESH
